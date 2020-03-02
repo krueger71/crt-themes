@@ -1,0 +1,9 @@
+.vscode/**
+.vscode-test/**
+.gitignore
+.gitattributes
+vsc-extension-quickstart.md
+src/*
+build/*
+media/*
+!media/icon.png

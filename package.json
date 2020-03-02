@@ -1,0 +1,126 @@
+{
+  "name": "crt-themes",
+  "version": "0.5.0",
+  "description": "Color themes for a more civilized age",
+  "keywords": [
+    "theme",
+    "color-theme",
+    "monochrome",
+    "terminal"
+  ],
+  "displayName": "CRT Themes",
+  "publisher": "krueger71",
+  "author": {
+    "name": "Fredrik Andersson",
+    "url": "https://github.com/krueger71"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krueger71/crt-themes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/krueger71/crt-themes/issues"
+  },
+  "license": "MIT",
+  "scripts": {
+    "clean": "rm -rf build themes",
+    "build": "mkdir -p themes && for x in 64 Amber Blue Gray Green Red Paper; do node src/build.js $x > themes/CRT-$x-color-theme.json; done",
+    "package": "mkdir -p build && vsce package -o ./build",
+    "vscode:prepublish": "npm run build",
+    "test": "jest",
+    "foo": "node src/main2.js"
+  },
+  "config": {
+    "themes": {
+      "CRT 64": {
+        "type": "dark",
+        "fg": "#6c5eb5",
+        "bg": "#352879"
+      },
+      "CRT Amber": {
+        "type": "dark",
+        "fg": "#ffb000",
+        "bg": "#111111"
+      },
+      "CRT Blue": {
+        "type": "dark",
+        "fg": "#0099ff",
+        "bg": "#111111"
+      },
+      "CRT Gray": {
+        "type": "dark",
+        "fg": "#bbbbbb",
+        "bg": "#111111"
+      },
+      "CRT Green": {
+        "type": "dark",
+        "fg": "#33ff00",
+        "bg": "#111111"
+      },
+      "CRT Red": {
+        "type": "dark",
+        "fg": "#ff1111",
+        "bg": "#111111"
+      },
+      "CRT Paper": {
+        "type": "light",
+        "fg": "#0f0f0f",
+        "bg": "#f0f0f0"
+      }
+    }
+  },
+  "engines": {
+    "vscode": "^1.42.0"
+  },
+  "icon": "media/icon.png",
+  "galleryBanner": {
+    "color": "#050",
+    "theme": "dark"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "CRT 64",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-64-color-theme.json"
+      },
+      {
+        "label": "CRT Amber",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-Amber-color-theme.json"
+      },
+      {
+        "label": "CRT Blue",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-Blue-color-theme.json"
+      },
+      {
+        "label": "CRT Gray",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-Gray-color-theme.json"
+      },
+      {
+        "label": "CRT Green",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-Green-color-theme.json"
+      },
+      {
+        "label": "CRT Red",
+        "uiTheme": "vs-dark",
+        "path": "./themes/crt-Red-color-theme.json"
+      },
+      {
+        "label": "CRT Paper",
+        "uiTheme": "vs",
+        "path": "./themes/CRT-Paper-color-theme.json"
+      }
+    ]
+  },
+  "devDependencies": {
+    "jest": "^25.1.0",
+    "vsce": "^1.74.0"
+  }
+}
