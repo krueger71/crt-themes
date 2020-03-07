@@ -112,7 +112,7 @@ const rgbaArrayToStr = rgba => {
  * @param {string} fg foreground color (#rrggbb)
  * @param {string} bg background color (#rrggbb)
  * @param {string[]} opacities array of up to 16 opacities as hex strings "00" to "ff" to override defaults
- * 
+ *
  * @returns {any} the resulting template
  */
 
@@ -121,22 +121,22 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
   const ol = [];
   for (let i = 0; i < 16; i++) {
     let y = "0";
-    y += Math.round(0xff - i*0xff/15).toString(16);
+    y += Math.round(0xff - (i * 0xff) / 15).toString(16);
     ol[i] = y.slice(-2);
   }
- 
+
   // Override levels of opacity
   if (opacities) {
     for (let i = 0; i < opacities.length; i++) {
-      ol[i+1] = opacities[i];
+      ol[i + 1] = opacities[i];
     }
   }
 
   const fgc = {};
 
   for (let i = 0; i < ol.length; i++) {
-    fgc["t"+i] = fg + ol[i];
-    fgc["s"+i] = opaqueRgb(fgc["t"+i], bg);
+    fgc["t" + i] = fg + ol[i];
+    fgc["s" + i] = opaqueRgb(fgc["t" + i], bg);
   }
 
   return {
@@ -158,7 +158,7 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "breadcrumb.activeSelectionForeground": fg,
       "breadcrumb.background": bg,
       "breadcrumb.focusForeground": fg,
-      "breadcrumb.foreground": fg,
+      "breadcrumb.foreground": fgc.t7,
       "breadcrumbPicker.background": bg,
       "button.background": bg,
       "button.foreground": fg,
@@ -166,6 +166,8 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "checkbox.background": bg,
       "checkbox.border": fgc.t7,
       "checkbox.foreground": fg,
+      //"contrastActiveBorder": fg,
+      //"contrastBorder": fgc.t7,
       "debugExceptionWidget.background": bg,
       "debugExceptionWidget.border": fgc.t7,
       "debugIcon.breakpointCurrentStackframeForeground": fg,
@@ -185,16 +187,16 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "debugIcon.stopForeground": fg,
       "debugToolBar.background": bg,
       "debugToolBar.border": fgc.t7,
-      "descriptionForeground": fg,
+      descriptionForeground: fg,
       "diffEditor.border": fgc.t7,
       "diffEditor.insertedTextBackground": fgc.t12,
-      "diffEditor.insertedTextBorder": fgc.t7,
+      //"diffEditor.insertedTextBorder": bg,
       "diffEditor.removedTextBackground": fgc.t12,
-      "diffEditor.removedTextBorder": fgc.t7,
+      //"diffEditor.removedTextBorder": bg,
       "dropdown.background": bg,
       "dropdown.border": fgc.t7,
       "dropdown.foreground": fg,
-      "dropdown.listBackground": fgc.t12,
+      "dropdown.listBackground": bg,
       "editor.background": bg,
       "editor.findMatchBackground": fgc.t7,
       "editor.findMatchBorder": fgc.t7,
@@ -234,17 +236,17 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "editorError.border": fgc.t7,
       "editorError.foreground": fg,
       "editorGroup.border": fgc.t7,
-      "editorGroup.dropBackground": bg,
+      "editorGroup.dropBackground": fgc.t12,
       "editorGroup.emptyBackground": bg,
       "editorGroup.focusedEmptyBorder": fgc.t7,
       "editorGroupHeader.noTabsBackground": bg,
       "editorGroupHeader.tabsBackground": bg,
       "editorGroupHeader.tabsBorder": fgc.t7,
-      "editorGutter.addedBackground": bg,
+      "editorGutter.addedBackground": fgc.t12,
       "editorGutter.background": bg,
-      "editorGutter.commentRangeForeground": fg,
-      "editorGutter.deletedBackground": bg,
-      "editorGutter.modifiedBackground": bg,
+      "editorGutter.commentRangeForeground": fgc.t12,
+      "editorGutter.deletedBackground": fgc.t12,
+      "editorGutter.modifiedBackground": fgc.t12,
       "editorHint.border": fgc.t7,
       "editorHint.foreground": fg,
       "editorHoverWidget.background": fgc.s12,
@@ -264,22 +266,22 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "editorMarkerNavigationError.background": fgc.t12,
       "editorMarkerNavigationInfo.background": fgc.t12,
       "editorMarkerNavigationWarning.background": fgc.t12,
-      "editorOverviewRuler.addedForeground": fg,
+      "editorOverviewRuler.addedForeground": fgc.t12,
       "editorOverviewRuler.border": fgc.t7,
-      "editorOverviewRuler.bracketMatchForeground": fg,
-      "editorOverviewRuler.commonContentForeground": fg,
-      "editorOverviewRuler.currentContentForeground": fg,
-      "editorOverviewRuler.deletedForeground": fg,
-      "editorOverviewRuler.errorForeground": fg,
-      "editorOverviewRuler.findMatchForeground": fg,
-      "editorOverviewRuler.incomingContentForeground": fg,
-      "editorOverviewRuler.infoForeground": fg,
-      "editorOverviewRuler.modifiedForeground": fg,
-      "editorOverviewRuler.rangeHighlightForeground": fg,
-      "editorOverviewRuler.selectionHighlightForeground": fg,
-      "editorOverviewRuler.warningForeground": fg,
-      "editorOverviewRuler.wordHighlightForeground": fg,
-      "editorOverviewRuler.wordHighlightStrongForeground": fg,
+      "editorOverviewRuler.bracketMatchForeground": fgc.t12,
+      "editorOverviewRuler.commonContentForeground": fgc.t12,
+      "editorOverviewRuler.currentContentForeground": fgc.t12,
+      "editorOverviewRuler.deletedForeground": fgc.t12,
+      "editorOverviewRuler.errorForeground": fgc.t7,
+      "editorOverviewRuler.findMatchForeground": fgc.t12,
+      "editorOverviewRuler.incomingContentForeground": fgc.t12,
+      "editorOverviewRuler.infoForeground": fgc.t12,
+      "editorOverviewRuler.modifiedForeground": fgc.t12,
+      "editorOverviewRuler.rangeHighlightForeground": fgc.t12,
+      "editorOverviewRuler.selectionHighlightForeground": fgc.t12,
+      "editorOverviewRuler.warningForeground": fgc.t12,
+      "editorOverviewRuler.wordHighlightForeground": fgc.t12,
+      "editorOverviewRuler.wordHighlightStrongForeground": fgc.t12,
       "editorPane.background": fgc.t12,
       "editorRuler.foreground": fg,
       "editorSuggestWidget.background": bg,
@@ -296,14 +298,14 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "editorWidget.border": fgc.t7,
       "editorWidget.foreground": fg,
       "editorWidget.resizeBorder": fgc.t7,
-      "errorForeground": fg,
+      errorForeground: fg,
       "extensionBadge.remoteBackground": bg,
       "extensionBadge.remoteForeground": fg,
       "extensionButton.prominentBackground": bg,
       "extensionButton.prominentForeground": fg,
       "extensionButton.prominentHoverBackground": bg,
-      "focusBorder": fgc.t7,
-      "foreground": fg,
+      focusBorder: fgc.t7,
+      foreground: fg,
       "gitDecoration.addedResourceForeground": fg,
       "gitDecoration.conflictingResourceForeground": fg,
       "gitDecoration.deletedResourceForeground": fg,
@@ -316,8 +318,8 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "input.background": bg,
       "input.border": fgc.t7,
       "input.foreground": fg,
-      "input.placeholderForeground": fg,
-      "inputOption.activeBackground": bg,
+      "input.placeholderForeground": fgc.t7,
+      "inputOption.activeBackground": fgc.t12,
       "inputOption.activeBorder": fgc.t7,
       "inputValidation.errorBackground": bg,
       "inputValidation.errorBorder": fgc.t7,
@@ -330,7 +332,7 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "inputValidation.warningForeground": fg,
       "list.activeSelectionBackground": fg,
       "list.activeSelectionForeground": bg,
-      "list.dropBackground": fgc.t7,
+      "list.dropBackground": fgc.t12,
       "list.errorForeground": fg,
       "list.filterMatchBackground": bg,
       "list.filterMatchBorder": fgc.t7,
@@ -427,7 +429,7 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "settings.dropdownForeground": fg,
       "settings.dropdownListBorder": fgc.t7,
       "settings.headerForeground": fg,
-      "settings.modifiedItemIndicator": fg,
+      "settings.modifiedItemIndicator": fgc.t7,
       "settings.numberInputBackground": bg,
       "settings.numberInputBorder": fgc.t7,
       "settings.numberInputForeground": fg,
@@ -436,7 +438,7 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "settings.textInputForeground": fg,
       "sideBar.background": bg,
       "sideBar.border": fgc.t7,
-      "sideBar.dropBackground": fgc.t7,
+      "sideBar.dropBackground": fgc.t12,
       "sideBar.foreground": fg,
       "sideBarSectionHeader.background": fgc.t12,
       "sideBarSectionHeader.border": fgc.t7,
@@ -511,22 +513,22 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "tab.unfocusedHoverBorder": bg,
       "tab.unfocusedInactiveForeground": fgc.t7,
       "tab.unfocusedInactiveModifiedBorder": bg,
-      "terminal.ansiBlack": fgc.s8,
-      "terminal.ansiBlue": fgc.s9,
+      "terminal.ansiBlack": fgc.s0,
       "terminal.ansiBrightBlack": fgc.s0,
+      "terminal.ansiBlue": fgc.s1,
       "terminal.ansiBrightBlue": fgc.s1,
-      "terminal.ansiBrightCyan": fgc.s2,
+      "terminal.ansiMagenta": fgc.s2,
+      "terminal.ansiBrightMagenta": fgc.s2,
+      "terminal.ansiGreen": fgc.s3,
       "terminal.ansiBrightGreen": fgc.s3,
-      "terminal.ansiBrightMagenta": fgc.s4,
-      "terminal.ansiBrightRed": fgc.s5,
-      "terminal.ansiBrightWhite": fgc.s6,
-      "terminal.ansiBrightYellow": fgc.s7,
-      "terminal.ansiCyan": fgc.s10,
-      "terminal.ansiGreen": fgc.s11,
-      "terminal.ansiMagenta": fgc.s12,
-      "terminal.ansiRed": fgc.s13,
-      "terminal.ansiWhite": fgc.s14,
-      "terminal.ansiYellow": fgc.s14,
+      "terminal.ansiRed": fgc.s4,
+      "terminal.ansiBrightRed": fgc.s4,
+      "terminal.ansiCyan": fgc.s5,
+      "terminal.ansiBrightCyan": fgc.s5,
+      "terminal.ansiYellow": fgc.s6,
+      "terminal.ansiBrightYellow": fgc.s6,
+      "terminal.ansiWhite": fgc.s7,
+      "terminal.ansiBrightWhite": fgc.s7,
       "terminal.background": bg,
       "terminal.border": fgc.t7,
       "terminal.foreground": fg,
@@ -550,9 +552,9 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "welcomePage.background": bg,
       "welcomePage.buttonBackground": bg,
       "welcomePage.buttonHoverBackground": bg,
-      "widget.shadow": fg,
+      "widget.shadow": fgc.t12,
       "window.activeBorder": fgc.t7,
-      "window.inactiveBorder": fgc.t7
+      "window.inactiveBorder": fgc.t12
     },
     tokenColors: [
       {
