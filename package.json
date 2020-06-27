@@ -27,8 +27,7 @@
     "build": "mkdir -p themes && for x in 64 Amber Blue Gray Green Red Paper; do node src/build.js $x > themes/CRT-$x-color-theme.json; done",
     "package": "mkdir -p build && vsce package -o ./build",
     "vscode:prepublish": "npm run build",
-    "test": "jest",
-    "foo": "node src/main2.js"
+    "test": "jest"
   },
   "config": {
     "themes": {
@@ -59,7 +58,7 @@
       },
       "CRT Red": {
         "type": "dark",
-        "fg": "#ff1111",
+        "fg": "#ff2222",
         "bg": "#111111"
       },
       "CRT Paper": {
@@ -121,6 +120,6 @@
   },
   "devDependencies": {
     "jest": "^25.1.0",
-    "vsce": "^1.74.0"
+    "vsce": "^1.77.0"
   }
 }
