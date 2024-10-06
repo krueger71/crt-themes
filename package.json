@@ -109,7 +109,7 @@
       {
         "label": "CRT Red",
         "uiTheme": "vs-dark",
-        "path": "./themes/crt-Red-color-theme.json"
+        "path": "./themes/CRT-Red-color-theme.json"
       },
       {
         "label": "CRT Paper",
