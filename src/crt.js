@@ -116,7 +116,7 @@ const rgbaArrayToStr = (rgba) => {
  * @returns {any} the resulting template
  */
 
-const crtThemplate = (name, type, fg, bg, opacities) => {
+const crtTemplate = (name, type, fg, bg, opacities) => {
   // Default levels of opacity
   const ol = [];
   for (let i = 0; i < 16; i++) {
@@ -128,7 +128,7 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
   // Override levels of opacity
   if (opacities) {
     for (let i = 0; i < opacities.length; i++) {
-      ol[i + 1] = opacities[i];
+      ol[i] = opacities[i];
     }
   }
 
@@ -606,6 +606,7 @@ const crtThemplate = (name, type, fg, bg, opacities) => {
       "window.activeBorder": fg_ta,
       "window.inactiveBorder": fg_tb,
     },
+    semanticHighlighting: false,
     tokenColors: [
       {
         scope: ["comment"],
@@ -641,5 +642,5 @@ module.exports = {
   opaqueRgb,
   rgbaArrayToStr,
   rgbaStrToArray,
-  crtThemplate,
+  crtTemplate,
 };
