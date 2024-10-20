@@ -112,11 +112,12 @@ const rgbaArrayToStr = (rgba) => {
  * @param {string} fg foreground color (#rrggbb)
  * @param {string} bg background color (#rrggbb)
  * @param {string[]} opacities array of up to 16 opacities as hex strings "00" to "ff" to override defaults
+ * @param {object} template template object with all possible color attributes
  *
  * @returns {any} the resulting template
  */
 
-const crtTemplate = (name, type, fg, bg, opacities) => {
+const crtTemplate = (name, type, fg, bg, opacities, template) => {
   // Default levels of opacity
   const ol = [];
   for (let i = 0; i < 16; i++) {
@@ -145,11 +146,12 @@ const crtTemplate = (name, type, fg, bg, opacities) => {
     fg_tc = fgc.t14; // fg_sc = fgc.s14;
 
   return {
-    //$schema: "vscode://schemas/color-theme",
+    "$schema": "vscode://schemas/color-theme",
     name: name,
     type: type,
     colors: {
-      "activityBar.activeBackground": fg_ta,
+      "actionBar.toggledBackground": fg_ta,
+      "activityBar.activeBackground": fg_tb,
       "activityBar.activeBorder": fg_ta,
       "activityBar.activeFocusBorder": fg_ta,
       "activityBar.background": bg,
@@ -159,6 +161,16 @@ const crtTemplate = (name, type, fg, bg, opacities) => {
       "activityBar.inactiveForeground": fg_ta,
       "activityBarBadge.background": fg,
       "activityBarBadge.foreground": bg,
+      "activityBarTop.activeBackground": fg_tb,
+      "activityBarTop.activeBorder": fg_ta,
+      "activityBarTop.background": bg,
+      "activityBarTop.dropBorder": fg_ta,
+      "activityBarTop.foreground": fg,
+      "activityBarTop.inactiveForeground": fg_ta,
+      "activityErrorBadge.background": fg,
+      "activityErrorBadge.foreground": bg,
+      "activityWarningBadge.background": fg,
+      "activityWarningBadge.foreground": bg,  
       "badge.background": bg,
       "badge.foreground": fg,
       "breadcrumb.activeSelectionForeground": fg,
@@ -605,12 +617,11 @@ const crtTemplate = (name, type, fg, bg, opacities) => {
       "window.activeBorder": fg_ta,
       "window.inactiveBorder": fg_tb,
     },
-    semanticHighlighting: false,
     tokenColors: [
       {
         scope: ["comment"],
         settings: {
-          foreground: fg_ta,
+          foreground: fg_tc,
         },
       },
       {
@@ -633,6 +644,9 @@ const crtTemplate = (name, type, fg, bg, opacities) => {
         },
       },
     ],
+    "semanticHighlighting": false,
+    "semanticTokenColors": {
+    }
   };
 };
 
