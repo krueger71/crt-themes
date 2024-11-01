@@ -621,7 +621,7 @@ const crtTemplate = (name, type, fg, bg, opacities, template) => {
       {
         scope: ["comment"],
         settings: {
-          foreground: fg_tc,
+          foreground: fg_tb,
         },
       },
       {
