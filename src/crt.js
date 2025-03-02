@@ -117,7 +117,7 @@ const rgbaArrayToStr = (rgba) => {
  * @returns {any} the resulting template
  */
 
-const crtTemplate = (name, type, foreground, background, opacityLevels, template) => {
+const crtTemplate = (name, type, foreground, background, opacityLevels) => {
   // Default levels of opacity
   const defaultOpacityLevels = [];
   for (let i = 0; i < 16; i++) {
@@ -147,11 +147,16 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
     fg_tc = foregroundColors.t14; // fg_sc = fgc.s14;
 
   // Logical colors
-  let activeBackground = fg_tb,
-    activeBorder = fg_ta,
+  let activeBackground = fg_tc,
+    activeBorder = fg_tb,
+    activeSelectionBackground = fg_ta,
+    activeSelectionForeground = foreground,
     border = fg_tb,
+    dropBorder = fg_tb,
     inactiveBackground = background,
-    inactiveForeground = fg_tb
+    inactiveForeground = fg_tb,
+    selectionBackground = fg_tb,
+    selectionForeground = foreground
   ;
 
   return {
@@ -159,13 +164,13 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
     name: name,
     type: type,
     colors: {
-      "actionBar.toggledBackground": fg_ta,
+      "actionBar.toggledBackground": background,
       "activityBar.activeBackground": activeBackground,
       "activityBar.activeBorder": activeBorder,
-      "activityBar.activeFocusBorder": fg_ta,
+      "activityBar.activeFocusBorder": border,
       "activityBar.background": background,
       "activityBar.border": border,
-      "activityBar.dropBorder": fg_ta,
+      "activityBar.dropBorder": dropBorder,
       "activityBar.foreground": foreground,
       "activityBar.inactiveForeground": inactiveForeground,
       "activityBarBadge.background": foreground,
@@ -173,7 +178,7 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
       "activityBarTop.activeBackground": activeBackground,
       "activityBarTop.activeBorder": activeBorder,
       "activityBarTop.background": background,
-      "activityBarTop.dropBorder": fg_ta,
+      "activityBarTop.dropBorder": dropBorder,
       "activityBarTop.foreground": foreground,
       "activityBarTop.inactiveForeground": inactiveForeground,
       "activityErrorBadge.background": foreground,
@@ -232,8 +237,8 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
       "commandCenter.inactiveForeground": inactiveForeground,
       "commentsView.resolvedIcon": fg_tb,
       "commentsView.unresolvedIcon": foreground,
-      "contrastActiveBorder": foreground,
-      "contrastBorder": "default",
+      //"contrastActiveBorder": foreground,
+      //"contrastBorder": "default",
       "debugConsole.errorForeground": foreground,
       "debugConsole.infoForeground": foreground,
       "debugConsole.sourceForeground": foreground,
@@ -318,8 +323,8 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
       "editor.placeholder.foreground": foreground,
       "editor.rangeHighlightBackground": fg_tb,
       "editor.rangeHighlightBorder": fg_ta,
-      "editor.selectionBackground": fg_tb,
-      "editor.selectionForeground": foreground,
+      "editor.selectionBackground": selectionBackground,
+      "editor.selectionForeground": selectionForeground,
       "editor.selectionHighlightBackground": fg_tb,
       "editor.selectionHighlightBorder": fg_ta,
       "editor.snippetFinalTabstopHighlightBackground": background,
@@ -578,8 +583,8 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
       "keybindingLabel.foreground": foreground,
       "keybindingTable.headerBackground": background,
       "keybindingTable.rowsBackground": background,
-      "list.activeSelectionBackground": foreground,
-      "list.activeSelectionForeground": background,
+      "list.activeSelectionBackground": activeSelectionBackground,
+      "list.activeSelectionForeground": activeSelectionForeground,
       "list.activeSelectionIconForeground": foreground,
       "list.deemphasizedForeground": fg_ta,
       "list.dropBackground": fg_tb,
@@ -609,13 +614,13 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
       "menu.background": background,
       "menu.border": border,
       "menu.foreground": foreground,
-      "menu.selectionBackground": fg_ta,
+      "menu.selectionBackground": selectionBackground,
       "menu.selectionBorder": fg_ta,
-      "menu.selectionForeground": background,
+      "menu.selectionForeground": selectionForeground,
       "menu.separatorBackground": fg_ta,
-      "menubar.selectionBackground": fg_tb,
+      "menubar.selectionBackground": selectionBackground,
       "menubar.selectionBorder": fg_ta,
-      "menubar.selectionForeground": foreground,
+      "menubar.selectionForeground": selectionForeground,
       "merge.border": border,
       "merge.commonContentBackground": fg_tb,
       "merge.commonHeaderBackground": fg_tb,
@@ -692,7 +697,7 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
       "outputViewStickyScroll.background": background,
       "panel.background": background,
       "panel.border": border,
-      "panel.dropBorder": foreground,
+      "panel.dropBorder": dropBorder,
       "panelInput.border": border,
       "panelSection.border": border,
       "panelSection.dropBackground": fg_tc,
@@ -716,8 +721,8 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
       "peekViewResult.fileForeground": foreground,
       "peekViewResult.lineForeground": foreground,
       "peekViewResult.matchHighlightBackground": background,
-      "peekViewResult.selectionBackground": background,
-      "peekViewResult.selectionForeground": foreground,
+      "peekViewResult.selectionBackground": selectionBackground,
+      "peekViewResult.selectionForeground": selectionForeground,
       "peekViewTitle.background": background,
       "peekViewTitleDescription.foreground": foreground,
       "peekViewTitleLabel.foreground": foreground,
@@ -934,8 +939,8 @@ const crtTemplate = (name, type, foreground, background, opacityLevels, template
       "terminal.hoverHighlightBackground": background,
       "terminal.inactiveSelectionBackground": background,
       "terminal.initialHintForeground": foreground,
-      "terminal.selectionBackground": fg_tb,
-      "terminal.selectionForeground": foreground,
+      "terminal.selectionBackground": selectionBackground,
+      "terminal.selectionForeground": selectionForeground,
       "terminal.tab.activeBorder": activeBorder,
       "terminalCommandDecoration.defaultBackground": background,
       "terminalCommandDecoration.errorBackground": background,
