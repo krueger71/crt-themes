@@ -148,7 +148,7 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
 
   /** Map colors for attribute programmatically */
   const color_map = (attribute) => {
-    let ret = "default";
+    let ret = foreground;
 
     if (attribute.match(/badge.*foreground/gi))
       ret = background;
@@ -162,7 +162,7 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       ret = medium_transparency_foreground;
     else if (attribute.match(/(highlight.*|match)foreground/gi))
       ret = low_transparency_foreground;
-    else if (attribute.match(/(toggled|active|debugging|line|text|hover|fold|selection|drop)background/gi))
+    else if (attribute.match(/(toggled|active|debugging|line|text|hover|fold|select|selection|drop)background/gi))
       ret = high_transparency_foreground;
     else if (attribute.match(/shadow/gi))
       ret = high_transparency_foreground;
