@@ -154,7 +154,7 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       ret = background;
     else if (attribute.match(/badge.*background/gi))
       ret = foreground;
-    else if (attribute.match(/(editor(Error|Info|Warning)\.background)/gi))
+    else if (attribute.match(/(editor(error|info|warning)\.background)/gi))
       ret = high_transparency_foreground;
     else if (attribute.match(/(merge.*|highlight.*|match|modified|original)background/gi))
       ret = high_transparency_foreground;
@@ -184,6 +184,8 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
     name: name,
     type: type,
     colors: {
+      //"contrastActiveBorder": color_map("contrastActiveBorder"),
+      //"contrastBorder": color_map("contrastBorder"),
       "actionBar.toggledBackground": color_map("actionBar.toggledBackground"),
       "activityBar.activeBackground": color_map("activityBar.activeBackground"),
       "activityBar.activeBorder": color_map("activityBar.activeBorder"),
@@ -532,6 +534,13 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       "extensionIcon.verifiedForeground": color_map("extensionIcon.verifiedForeground"),
       "focusBorder": color_map("focusBorder"),
       "foreground": color_map("foreground"),
+      "gauge.background": color_map("gauge.background"),
+      "gauge.border": color_map("gauge.border"),
+      "gauge.errorBackground": color_map("gauge.errorBackground"),
+      "gauge.errorForeground": color_map("gauge.errorForeground"),
+      "gauge.foreground": color_map("gauge.foreground"),
+      "gauge.warningBackground": color_map("gauge.warningBackground"),
+      "gauge.warningForeground": color_map("gauge.warningForeground"),
       "git.blame.editorDecorationForeground": color_map("git.blame.editorDecorationForeground"),
       "gitDecoration.addedResourceForeground": color_map("gitDecoration.addedResourceForeground"),
       "gitDecoration.conflictingResourceForeground": color_map("gitDecoration.conflictingResourceForeground"),
@@ -572,6 +581,7 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       "inlineEdit.originalBorder": color_map("inlineEdit.originalBorder"),
       "inlineEdit.originalChangedLineBackground": color_map("inlineEdit.originalChangedLineBackground"),
       "inlineEdit.originalChangedTextBackground": color_map("inlineEdit.originalChangedTextBackground"),
+      "inlineEdit.tabWillAcceptBorder": color_map("inlineEdit.tabWillAcceptBorder"),
       "inlineEdit.wordReplacementView.background": color_map("inlineEdit.wordReplacementView.background"),
       "input.background": color_map("input.background"),
       "input.border": color_map("input.border"),
@@ -660,6 +670,7 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       "mergeEditor.conflict.unhandledUnfocused.border": color_map("mergeEditor.conflict.unhandledUnfocused.border"),
       "mergeEditor.conflictingLines.background": color_map("mergeEditor.conflictingLines.background"),
       "minimap.background": color_map("minimap.background"),
+      "minimap.chatEditHighlight": color_map("minimap.chatEditHighlight"),
       "minimap.errorHighlight": color_map("minimap.errorHighlight"),
       "minimap.findMatchHighlight": color_map("minimap.findMatchHighlight"),
       "minimap.foregroundOpacity": color_map("minimap.foregroundOpacity"),
@@ -729,6 +740,8 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       "panelTitle.activeForeground": color_map("panelTitle.activeForeground"),
       "panelTitle.border": color_map("panelTitle.border"),
       "panelTitle.inactiveForeground": color_map("panelTitle.inactiveForeground"),
+      "panelTitleBadge.background": color_map("panelTitleBadge.background"),
+      "panelTitleBadge.foreground": color_map("panelTitleBadge.foreground"),
       "peekView.border": color_map("peekView.border"),
       "peekViewEditor.background": color_map("peekViewEditor.background"),
       "peekViewEditor.matchHighlightBackground": color_map("peekViewEditor.matchHighlightBackground"),
@@ -972,6 +985,8 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       "terminalStickyScroll.background": color_map("terminalStickyScroll.background"),
       "terminalStickyScroll.border": color_map("terminalStickyScroll.border"),
       "terminalStickyScrollHover.background": color_map("terminalStickyScrollHover.background"),
+      "terminalSymbolIcon.aliasForeground": color_map("terminalSymbolIcon.aliasForeground"),
+      "terminalSymbolIcon.flagForeground": color_map("terminalSymbolIcon.flagForeground"),
       "testing.coverCountBadgeBackground": color_map("testing.coverCountBadgeBackground"),
       "testing.coverCountBadgeForeground": color_map("testing.coverCountBadgeForeground"),
       "testing.coveredBackground": color_map("testing.coveredBackground"),
@@ -1036,8 +1051,6 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       "widget.shadow": color_map("widget.shadow"),
       "window.activeBorder": color_map("window.activeBorder"),
       "window.inactiveBorder": color_map("window.inactiveBorder"),
-      //"contrastActiveBorder": cmap("contrastActiveBorder"),
-      //"contrastBorder": cmap("contrastBorder"),
     },
     tokenColors: [
       {
