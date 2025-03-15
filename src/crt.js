@@ -150,7 +150,9 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
   const color_map = (attribute) => {
     let ret = foreground;
 
-    if (attribute.match(/badge.*foreground/gi))
+    if (attribute.match(/(lineHighlightBorder|contrastBorder|contrastActiveBorder)/gi))
+      ret = null;
+    else if (attribute.match(/badge.*foreground/gi))
       ret = background;
     else if (attribute.match(/badge.*background/gi))
       ret = foreground;
@@ -158,7 +160,7 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       ret = high_transparency_foreground;
     else if (attribute.match(/(merge.*|highlight.*|match|modified|original)background/gi))
       ret = high_transparency_foreground;
-    else if (attribute.match(/minimap.*highlight/gi))
+    else if (attribute.match(/(minimap.*highlight|refcolor)/gi))
       ret = medium_transparency_foreground;
     else if (attribute.match(/(highlight.*|match)foreground/gi))
       ret = low_transparency_foreground;
@@ -184,8 +186,6 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
     name: name,
     type: type,
     colors: {
-      //"contrastActiveBorder": color_map("contrastActiveBorder"),
-      //"contrastBorder": color_map("contrastBorder"),
       "actionBar.toggledBackground": color_map("actionBar.toggledBackground"),
       "activityBar.activeBackground": color_map("activityBar.activeBackground"),
       "activityBar.activeBorder": color_map("activityBar.activeBorder"),
@@ -259,6 +259,8 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       "commandCenter.inactiveForeground": color_map("commandCenter.inactiveForeground"),
       "commentsView.resolvedIcon": color_map("commentsView.resolvedIcon"),
       "commentsView.unresolvedIcon": color_map("commentsView.unresolvedIcon"),
+      "contrastActiveBorder": color_map("contrastActiveBorder"),
+      "contrastBorder": color_map("contrastBorder"),
       "debugConsole.errorForeground": color_map("debugConsole.errorForeground"),
       "debugConsole.infoForeground": color_map("debugConsole.infoForeground"),
       "debugConsole.sourceForeground": color_map("debugConsole.sourceForeground"),
