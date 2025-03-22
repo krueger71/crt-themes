@@ -150,7 +150,7 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
   const color_map = (attribute) => {
     let ret = foreground;
 
-    if (attribute.match(/(lineHighlightBorder|contrastBorder|contrastActiveBorder)/gi))
+    if (attribute.match(/(linehighlightborder|contrastborder|contrastactiveborder)/gi))
       ret = null;
     else if (attribute.match(/badge.*foreground/gi))
       ret = background;
@@ -160,13 +160,13 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
       ret = high_transparency_foreground;
     else if (attribute.match(/(merge.*|highlight.*|match|modified|original)background/gi))
       ret = high_transparency_foreground;
-    else if (attribute.match(/(minimap.*highlight|refcolor)/gi))
+    else if (attribute.match(/(minimap.*highlight|minimapslider\.background|refcolor)/gi))
       ret = medium_transparency_foreground;
     else if (attribute.match(/(highlight.*|match)foreground/gi))
       ret = low_transparency_foreground;
     else if (attribute.match(/(toggled|active|debugging|line|text|hover|fold|select|selection|drop)background/gi))
       ret = high_transparency_foreground;
-    else if (attribute.match(/shadow/gi))
+    else if (attribute.match(/shadow|editorwhitespace\.foreground/gi))
       ret = high_transparency_foreground;
     else if (attribute.match(/opacity/gi))
       ret = low_transparency_foreground;
