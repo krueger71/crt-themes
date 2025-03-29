@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.6.0] - 2025-03-01
+
+Long overdue update.
+
+- Customized all available attributes
+- More work on consistency
+- Fixed the red theme file name issue
+
 ## [0.5.2] - 2020-06-27
 
 - More work on consistency.
