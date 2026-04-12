@@ -1,4 +1,4 @@
-let p = require('../package.json')
+let p = require('../package.json');
 let crt = require('./crt.js');
 
 let args = process.argv.slice(2);

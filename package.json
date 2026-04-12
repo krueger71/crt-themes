@@ -22,13 +22,6 @@
     "url": "https://github.com/krueger71/crt-themes/issues"
   },
   "license": "MIT",
-  "scripts": {
-    "clean": "rm -rf build themes",
-    "build": "mkdir -p themes && for x in 64 Amber Blue Custom Gray Green Red Paper; do node src/build.js $x > themes/CRT-$x-color-theme.json; done",
-    "package": "mkdir -p build && vsce package -o ./build",
-    "vscode:prepublish": "npm run build",
-    "test": "jest"
-  },
   "config": {
     "themes": {
       "CRT 64": {
@@ -74,7 +67,7 @@
     }
   },
   "engines": {
-    "vscode": "^1.42.0"
+    "vscode": "^1.115.0"
   },
   "icon": "media/icon.png",
   "galleryBanner": {
@@ -85,6 +78,12 @@
     "Themes"
   ],
   "contributes": {
+    "commands": [
+      {
+        "command": "crt-themes.helloWorld",
+        "title": "Hello World"
+      }
+    ],
     "themes": [
       {
         "label": "CRT 64",
@@ -128,8 +127,28 @@
       }
     ]
   },
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "scripts": {
+    "clean": "rm -rf build themes out",
+    "build": "npm run compile && mkdir -p themes && for x in 64 Amber Blue Custom Gray Green Red Paper; do node src/build.js $x > themes/CRT-$x-color-theme.json; done",
+    "package": "mkdir -p build && vsce package -o ./build",
+    "vscode:prepublish": "npm run build",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
   "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.115.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^3.7.1",
-    "jest": "^30.3.0"
+    "eslint": "^9.39.3",
+    "typescript-eslint": "^8.56.1",
+    "typescript": "^5.9.3"
   }
 }

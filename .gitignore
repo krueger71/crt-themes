@@ -1,4 +1,6 @@
+.vscode-test/
 node_modules/
+/out/
 /themes/
 /build/
 .DS_Store

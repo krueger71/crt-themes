@@ -18,7 +18,7 @@ const opaque = (rgba, brgb) => {
   let alpha = rgba[3];
   ret[3] = 1;
 
-  for (i = 0; i < 3; i++) {
+  for (let i = 0; i < 3; i++) {
     ret[i] = Math.round(rgba[i] * alpha + brgb[i] * (1 - alpha));
   }
 
@@ -150,35 +150,22 @@ const crtTemplate = (name, type, foreground, background, opacityLevels) => {
   const color_map = (attribute) => {
     let ret = foreground;
 
-    if (attribute.match(/(linehighlightborder|contrastborder|contrastactiveborder)/gi))
-      ret = null;
-    else if (attribute.match(/badge.*foreground/gi))
-      ret = background;
-    else if (attribute.match(/badge.*background/gi))
-      ret = foreground;
-    else if (attribute.match(/(editor(error|info|warning)\.background)/gi))
-      ret = high_transparency_foreground;
-    else if (attribute.match(/(merge.*|highlight.*|match|modified|original)background/gi))
-      ret = high_transparency_foreground;
-    else if (attribute.match(/(minimap.*highlight|minimapslider\.background|refcolor)/gi))
-      ret = medium_transparency_foreground;
-    else if (attribute.match(/(highlight.*|match)foreground/gi))
-      ret = low_transparency_foreground;
-    else if (attribute.match(/(toggled|active|debugging|line|text|hover|fold|select|selection|drop)background/gi))
-      ret = high_transparency_foreground;
-    else if (attribute.match(/shadow|editorwhitespace\.foreground/gi))
-      ret = high_transparency_foreground;
-    else if (attribute.match(/opacity/gi))
-      ret = low_transparency_foreground;
-    else if (attribute.match(/background/gi))
-      ret = background;
-    else if (attribute.match(/foreground/gi))
-      ret = foreground;
-    else if (attribute.match(/border|separator|outline/gi))
-      ret = medium_transparency_foreground;
+    if (attribute.match(/(linehighlightborder|contrastborder|contrastactiveborder)/gi)) { ret = null; }
+    else if (attribute.match(/badge.*foreground/gi)) { ret = background; }
+    else if (attribute.match(/badge.*background/gi)) { ret = foreground; }
+    else if (attribute.match(/(editor(error|info|warning)\.background)/gi)) { ret = high_transparency_foreground; }
+    else if (attribute.match(/(merge.*|highlight.*|match|modified|original)background/gi)) { ret = high_transparency_foreground; }
+    else if (attribute.match(/(minimap.*highlight|minimapslider\.background|refcolor)/gi)) { ret = medium_transparency_foreground; }
+    else if (attribute.match(/(highlight.*|match)foreground/gi)) { ret = low_transparency_foreground; }
+    else if (attribute.match(/(toggled|active|debugging|line|text|hover|fold|select|selection|drop)background/gi)) { ret = high_transparency_foreground; }
+    else if (attribute.match(/shadow|editorwhitespace\.foreground/gi)) { ret = high_transparency_foreground; }
+    else if (attribute.match(/opacity/gi)) { ret = low_transparency_foreground; }
+    else if (attribute.match(/background/gi)) { ret = background; }
+    else if (attribute.match(/foreground/gi)) { ret = foreground; }
+    else if (attribute.match(/border|separator|outline/gi)) { ret = medium_transparency_foreground; }
 
     return ret;
-  }
+  };
 
 
   return {
