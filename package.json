@@ -78,10 +78,26 @@
     "Themes"
   ],
   "contributes": {
+    "configuration": {
+      "title": "CRT Themes",
+      "type": "object",
+      "properties": {
+        "crt-themes.foreground": {
+          "type": "string",
+          "default": "#fff",
+          "description": "Custom theme foreground color"
+        },
+        "crt-themes.background": {
+          "type": "string",
+          "default": "#000",
+          "description": "Custom theme background color"
+        }
+      }
+    },
     "commands": [
       {
-        "command": "crt-themes.helloWorld",
-        "title": "Hello World"
+        "command": "crt-themes.createCustomTheme",
+        "title": "CRT Themes: Create custom theme"
       }
     ],
     "themes": [
@@ -148,7 +164,7 @@
     "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^3.7.1",
     "eslint": "^9.39.3",
-    "typescript-eslint": "^8.56.1",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
   }
 }
