@@ -1,27 +1,42 @@
 import * as vscode from 'vscode';
-import * as crt from './crt';
+import { SourceColors, generateTheme } from './theme';
 
-export async function activate(context: vscode.ExtensionContext) {
+const THEME_NAME = 'CRT Custom';
 
-	const disposable = vscode.commands.registerCommand('crt-themes.createCustomTheme', async () => {
-		const cf = vscode.workspace.getConfiguration('crt-themes');
-		const fg = cf.get('foreground');
-		const bg = cf.get('background');
+export function activate(context: vscode.ExtensionContext) {
 
-		const schemaUri = vscode.Uri.parse('vscode://schemas/workbench-colors');
-		const doc = await vscode.workspace.openTextDocument(schemaUri);
-		const schema = JSON.parse(doc.getText());
-		const colorKeys = Object.keys(schema.properties ?? {});
+	// Commands
+	context.subscriptions.push(
+		vscode.commands.registerCommand('crt-themes.showColorKeys', showColorKeys),
+		vscode.commands.registerCommand('crt-themes.createCustomTheme', createCustomTheme),
+		vscode.commands.registerCommand('crt-themes.resetCustomizations', clearDynamicTheme),
+	);
 
-		await dumpColorKeys(context);
+	// Config change listener for dynamic mode
+	context.subscriptions.push(
+		vscode.workspace.onDidChangeConfiguration(async e => {
+			const relevant =
+				e.affectsConfiguration('crt-themes.background') ||
+				e.affectsConfiguration('crt-themes.foreground') ||
+				e.affectsConfiguration('crt-themes.dynamicApplication');
 
-		vscode.window.showInformationMessage(`CRT Themes! fg=${fg} bg=${bg} colors=${colorKeys.slice(0, 10)}`);
-	});
+			if (!relevant) { return; }
 
-	context.subscriptions.push(disposable);
+			const cfg = vscode.workspace.getConfiguration('crt-themes');
+			const dynamic = cfg.get<boolean>('dynamicApplication', false);
+
+			if (!dynamic) { return; }
+
+			const bg = cfg.get<string>('background', '#000000');
+			const fg = cfg.get<string>('foreground', '#ffffff');
+			await applyDynamicTheme({ bg, fg });
+		})
+	);
 }
 
-export async function dumpColorKeys(context: vscode.ExtensionContext) {
+export function deactivate() { }
+
+export async function showColorKeys(context: vscode.ExtensionContext) {
 	// 1. Read the schema
 	const schemaUri = vscode.Uri.parse('vscode://schemas/workbench-colors');
 	const doc = await vscode.workspace.openTextDocument(schemaUri);
@@ -52,4 +67,50 @@ export async function dumpColorKeys(context: vscode.ExtensionContext) {
 	await vscode.window.showTextDocument(newDoc, { preview: false });
 }
 
-export function deactivate() { }
+export async function createCustomTheme(context: vscode.ExtensionContext) {
+	const cfg = vscode.workspace.getConfiguration('crt-themes');
+	const dynamic = cfg.get<boolean>('dynamicApplication', false);
+
+	if (!dynamic) { return; }
+
+	const bg = cfg.get<string>('background', '#000000');
+	const fg = cfg.get<string>('foreground', '#ffffff');
+	await applyDynamicTheme({ bg, fg });
+}
+
+export async function applyDynamicTheme(src: SourceColors): Promise<void> {
+	const { workbenchColors, textMateRules, semanticRules } = generateTheme(src);
+	const cfg = vscode.workspace.getConfiguration();
+	const target = vscode.ConfigurationTarget.Global;
+
+	await cfg.update('workbench.colorCustomizations', {
+		...cfg.get('workbench.colorCustomizations'),
+		[`[${THEME_NAME}]`]: workbenchColors,
+	}, target);
+
+	await cfg.update('editor.tokenColorCustomizations', {
+		...cfg.get('editor.tokenColorCustomizations'),
+		[`[${THEME_NAME}]`]: { textMateRules },
+	}, target);
+
+	await cfg.update('editor.semanticTokenColorCustomizations', {
+		...cfg.get('editor.semanticTokenColorCustomizations'),
+		[`[${THEME_NAME}]`]: { enabled: true, rules: semanticRules },
+	}, target);
+}
+
+export async function clearDynamicTheme(): Promise<void> {
+	const cfg = vscode.workspace.getConfiguration();
+	const target = vscode.ConfigurationTarget.Global;
+	const key = `[${THEME_NAME}]`;
+
+	for (const section of [
+		'workbench.colorCustomizations',
+		'editor.tokenColorCustomizations',
+		'editor.semanticTokenColorCustomizations',
+	]) {
+		const current = { ...cfg.get<Record<string, unknown>>(section) };
+		delete current[key];
+		await cfg.update(section, current, target);
+	}
+}

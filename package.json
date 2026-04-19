@@ -80,27 +80,44 @@
   "contributes": {
     "configuration": {
       "title": "CRT Themes",
-      "type": "object",
       "properties": {
-        "crt-themes.foreground": {
-          "type": "string",
-          "default": "#fff",
-          "description": "Custom theme foreground color"
-        },
         "crt-themes.background": {
           "type": "string",
-          "default": "#000",
-          "description": "Custom theme background color"
+          "default": "#000000",
+          "description": "Background color for CRT Custom theme"
+        },
+        "crt-themes.foreground": {
+          "type": "string",
+          "default": "#ffffff",
+          "description": "Foreground color for CRT Custom theme"
+        },
+        "crt-themes.dynamicApplication": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically apply CRT Custom colors to your settings.json"
         }
       }
     },
     "commands": [
       {
+        "command": "crt-themes.showColorKeys",
+        "title": "CRT Themes: Show available color keys in a new window"
+      },
+      {
         "command": "crt-themes.createCustomTheme",
         "title": "CRT Themes: Create custom theme"
+      },
+      {
+        "command": "crt-themes.resetCustomizations",
+        "title": "CRT Themes: Reset Custom Overrides"
       }
     ],
     "themes": [
+      {
+        "label": "CRT Custom",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-Custom-color-theme.json"
+      },
       {
         "label": "CRT 64",
         "uiTheme": "vs-dark",
@@ -115,11 +132,6 @@
         "label": "CRT Blue",
         "uiTheme": "vs-dark",
         "path": "./themes/CRT-Blue-color-theme.json"
-      },
-      {
-        "label": "CRT Custom",
-        "uiTheme": "vs-dark",
-        "path": "./themes/CRT-Custom-color-theme.json"
       },
       {
         "label": "CRT Gray",
