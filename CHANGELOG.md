@@ -1,5 +1,14 @@
 # Change Log
 
+## [0.6.0] - 2026-05-01
+
+Long overdue update.
+
+- Added a CRT Custom theme for users to customize.
+- Customization on all available attributes.
+- More work on consistency.
+- Fixed the red theme file name issue.
+
 ## [0.5.2] - 2020-06-27
 
 - More work on consistency.

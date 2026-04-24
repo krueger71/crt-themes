@@ -1,6 +1,6 @@
 {
   "name": "crt-themes",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Color themes for a more civilized age",
   "keywords": [
     "theme",
@@ -22,13 +22,6 @@
     "url": "https://github.com/krueger71/crt-themes/issues"
   },
   "license": "MIT",
-  "scripts": {
-    "clean": "rm -rf build themes",
-    "build": "mkdir -p themes && for x in 64 Amber Blue Gray Green Red Paper; do node src/build.js $x > themes/CRT-$x-color-theme.json; done",
-    "package": "mkdir -p build && vsce package -o ./build",
-    "vscode:prepublish": "npm run build",
-    "test": "jest"
-  },
   "config": {
     "themes": {
       "CRT 64": {
@@ -45,6 +38,11 @@
         "type": "dark",
         "fg": "#0099ff",
         "bg": "#111111"
+      },
+      "CRT Custom": {
+        "type": "dark",
+        "fg": "#ffffff",
+        "bg": "#000000"
       },
       "CRT Gray": {
         "type": "dark",
@@ -69,7 +67,7 @@
     }
   },
   "engines": {
-    "vscode": "^1.42.0"
+    "vscode": "^1.115.0"
   },
   "icon": "media/icon.png",
   "galleryBanner": {
@@ -80,7 +78,46 @@
     "Themes"
   ],
   "contributes": {
+    "configuration": {
+      "title": "CRT Themes",
+      "properties": {
+        "crt-themes.background": {
+          "type": "string",
+          "default": "#000000",
+          "description": "Background color for CRT Custom theme"
+        },
+        "crt-themes.foreground": {
+          "type": "string",
+          "default": "#ffffff",
+          "description": "Foreground color for CRT Custom theme"
+        },
+        "crt-themes.dynamicApplication": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically apply CRT Custom colors to your settings.json"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "crt-themes.showColorKeys",
+        "title": "CRT Themes: Show available color keys in a new window"
+      },
+      {
+        "command": "crt-themes.createCustomTheme",
+        "title": "CRT Themes: Create custom theme"
+      },
+      {
+        "command": "crt-themes.resetCustomizations",
+        "title": "CRT Themes: Reset Custom Overrides"
+      }
+    ],
     "themes": [
+      {
+        "label": "CRT Custom",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-Custom-color-theme.json"
+      },
       {
         "label": "CRT 64",
         "uiTheme": "vs-dark",
@@ -118,8 +155,28 @@
       }
     ]
   },
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "scripts": {
+    "clean": "rm -rf build themes out",
+    "build": "npm run compile && mkdir -p themes && for x in 64 Amber Blue Custom Gray Green Red Paper; do node src/build.js $x > themes/CRT-$x-color-theme.json; done",
+    "package": "mkdir -p build && vsce package -o ./build",
+    "vscode:prepublish": "npm run build",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
   "devDependencies": {
-    "@vscode/vsce": "^3.1.1",
-    "jest": "^29.7.0"
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "@types/vscode": "^1.115.0",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2",
+    "@vscode/vsce": "^2.25.0",
+    "eslint": "^9.39.3",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1"
   }
 }
