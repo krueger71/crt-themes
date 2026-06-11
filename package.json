@@ -83,11 +83,13 @@
       "properties": {
         "crt-themes.background": {
           "type": "string",
+          "format": "color-hex",
           "default": "#000000",
           "description": "Background color for CRT Custom theme"
         },
         "crt-themes.foreground": {
           "type": "string",
+          "format": "color-hex",
           "default": "#ffffff",
           "description": "Foreground color for CRT Custom theme"
         },
@@ -155,7 +157,9 @@
       }
     ]
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "scripts": {
     "clean": "rm -rf build themes out",

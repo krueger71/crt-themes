@@ -55,7 +55,7 @@ The `src/crt.c` and `src/term.js` files are references — not part of the build
 ### Runtime extension (`src/extension.ts`)
 The extension activates to support the **CRT Custom** theme's dynamic mode. When `crt-themes.dynamicApplication` is true, changing `crt-themes.foreground` or `crt-themes.background` triggers `applyDynamicTheme()`, which calls `generateTheme()` from `src/theme.ts` and writes the result to VS Code's global `workbench.colorCustomizations`, `editor.tokenColorCustomizations`, and `editor.semanticTokenColorCustomizations`. The `resetCustomizations` command removes those keys. The new TypeScript pipeline is already powering the live dynamic feature.
 
-Backup/restore of the user's pre-existing customizations before `applyDynamicTheme()` overwrites them is a planned but not-yet-implemented safety feature.
+Before the first overwrite, `applyDynamicTheme()` backs up any pre-existing `[CRT Custom]` blocks into `context.globalState`; `resetCustomizations` restores them (or removes the blocks if nothing pre-existed). All settings writes go through `inspect().globalValue` rather than `get()` so workspace-scoped values never leak into user settings. The `createCustomTheme` command prompts for fg/bg, saves them, applies the theme, and switches `workbench.colorTheme` to CRT Custom.
 
 ## Adding or modifying a theme
 
@@ -66,4 +66,4 @@ Backup/restore of the user's pre-existing customizations before `applyDynamicThe
 
 ## Tests
 
-Tests live in `src/test/`. `crt.test.ts` tests the legacy JS helpers (`rgbaStrToArray`, `rgbaArrayToStr`, `opaque`, `opaqueRgb`) by importing from `../crt`. `extension.test.ts` is a stub. Tests run inside a VS Code process via `@vscode/test-electron` — they cannot run headless without a display.
+Tests live in `src/test/`. `crt.test.ts` tests the legacy JS helpers (`rgbaStrToArray`, `rgbaArrayToStr`, `opaque`, `opaqueRgb`) by importing from `../crt`. `extension.test.ts` covers the dynamic theme apply/backup/reset round-trip against the real global settings of the test instance, plus `normalizeHex` validation. Tests run inside a VS Code process via `@vscode/test-electron` — they cannot run headless without a display.
