@@ -1,32 +1,44 @@
+import { workbenchClassification } from './classification';
+
 export interface SourceColors {
     bg: string;
     fg: string;
 }
 
-// The derived 2-bit palette — all theme mapping works from this
+// The derived 2-bit palette — all theme mapping works from this.
+// Everything is a solid color except the `alpha*` group, which exists only
+// for the handful of VS Code keys that must be translucent because the
+// renderer stacks them (editor decorations, scrollbar sliders, shadows).
 export interface ColorTokens {
-    // Backgrounds
-    bgBase: string;  // bg @ 100%
-    bgRaised: string;  // bg mixed slightly toward fg
-    bgSunken: string;  // bg mixed slightly away from fg
-    bgOverlay: string;  // bgBase + transparency
+    // Backgrounds (bg side of the ladder)
+    bgSunken: string;   // below base — panels/terminal/title bar wells
+    bgBase: string;     // bg @ 100% — the editor surface
+    bgRaised: string;   // slightly toward fg — sidebars, hover, line highlight
+    bgWidget: string;   // further toward fg — floating widgets, menus, dropdowns
 
-    // Foregrounds
-    fgPrimary: string;  // fg @ 100%
-    fgSecondary: string;  // fg @ ~70%
-    fgTertiary: string;  // fg @ ~45%
-    fgMuted: string;  // fg @ ~20%
+    // Foregrounds (fg side of the ladder)
+    fgPrimary: string;   // fg @ 100%
+    fgSecondary: string; // one rung down
+    fgTertiary: string;  // two rungs down
+    fgMuted: string;     // faintest readable rung
 
-    // Inverted (for badges, active tab highlights etc)
+    // Inverted (badges, buttons, status bar)
     invertBg: string;
     invertFg: string;
 
-    // Transparent variants
-    selectionBg: string;  // fgPrimary + low alpha (selection)
-    highlightBg: string;  // fgPrimary + very low alpha (word highlight)
-    borderSubtle: string;  // fgMuted + alpha
-    borderFocus: string;  // fgPrimary + alpha
+    // Mid-ladder solids
+    selectionBg: string;   // opaque selection — text renders on top of it
+    borderSubtle: string;
+    borderFocus: string;
+
+    // Translucent — only for keys VS Code composites over other decorations
+    alphaStrong: string;
+    alphaMid: string;
+    alphaFaint: string;
+    shadow: string;
 }
+
+export type TokenName = keyof ColorTokens;
 
 // What the generator produces for a complete theme
 export interface GeneratedTheme {
@@ -52,51 +64,123 @@ export interface SemanticTokenRule {
     underline?: boolean;
 }
 
-// Naive implementation — just hex alpha suffixes and simple mixing
-// Replace with chroma-js later for perceptual accuracy
+// ---------------------------------------------------------------------------
+// Color math — sRGB <-> OKLab so mixing is perceptually uniform
+// ---------------------------------------------------------------------------
 
-function mix(hex1: string, hex2: string, t: number): string {
-    const a = hexToRgb(hex1);
-    const b = hexToRgb(hex2);
-    const r = Math.round(a.r + (b.r - a.r) * t);
-    const g = Math.round(a.g + (b.g - a.g) * t);
-    const bl = Math.round(a.b + (b.b - a.b) * t);
-    return rgbToHex(r, g, bl);
+export function normalizeHex(hex: string): string {
+    const m = /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec(hex.trim());
+    if (!m) {
+        throw new Error(`Invalid color "${hex}" — expected #rgb or #rrggbb`);
+    }
+    let h = m[1].toLowerCase();
+    if (h.length === 3) {
+        h = h.split('').map(c => c + c).join('');
+    }
+    return '#' + h;
 }
 
-function withAlpha(hex: string, alpha: number): string {
-    return hex + Math.round(alpha * 255).toString(16).padStart(2, '0');
-}
-
-function hexToRgb(hex: string) {
-    const n = parseInt(hex.replace('#', ''), 16);
-    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+function hexToRgb(hex: string): [number, number, number] {
+    const n = parseInt(normalizeHex(hex).slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
 function rgbToHex(r: number, g: number, b: number): string {
-    return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
+    return '#' + [r, g, b]
+        .map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0'))
+        .join('');
 }
 
+function srgbToLinear(c: number): number {
+    const v = c / 255;
+    return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+}
+
+function linearToSrgb(v: number): number {
+    const c = v <= 0.0031308 ? v * 12.92 : 1.055 * Math.pow(v, 1 / 2.4) - 0.055;
+    return c * 255;
+}
+
+type OkLab = [number, number, number];
+
+function hexToOklab(hex: string): OkLab {
+    const [r8, g8, b8] = hexToRgb(hex);
+    const r = srgbToLinear(r8), g = srgbToLinear(g8), b = srgbToLinear(b8);
+    const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b);
+    const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b);
+    const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b);
+    return [
+        0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s,
+        1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s,
+        0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s,
+    ];
+}
+
+function oklabToHex([L, a, b]: OkLab): string {
+    const l = Math.pow(L + 0.3963377774 * a + 0.2158037573 * b, 3);
+    const m = Math.pow(L - 0.1055613458 * a - 0.0638541728 * b, 3);
+    const s = Math.pow(L - 0.0894841775 * a - 1.2914855480 * b, 3);
+    return rgbToHex(
+        linearToSrgb(+4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s),
+        linearToSrgb(-1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s),
+        linearToSrgb(-0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s),
+    );
+}
+
+// Step a color down in perceptual lightness, keeping its hue/chroma.
+// Clamps at the gamut edge (a pure-black bg stays black).
+export function darken(hex: string, dL: number): string {
+    const [L, a, b] = hexToOklab(hex);
+    return oklabToHex([Math.max(0, L - dL), a, b]);
+}
+
+// Perceptual mix; t may extrapolate outside [0,1] (result clamped to gamut)
+export function mix(hex1: string, hex2: string, t: number): string {
+    const a = hexToOklab(hex1);
+    const b = hexToOklab(hex2);
+    return oklabToHex([
+        a[0] + (b[0] - a[0]) * t,
+        a[1] + (b[1] - a[1]) * t,
+        a[2] + (b[2] - a[2]) * t,
+    ]);
+}
+
+export function withAlpha(hex: string, alpha: number): string {
+    return normalizeHex(hex) + Math.round(alpha * 255).toString(16).padStart(2, '0');
+}
+
+// ---------------------------------------------------------------------------
+// Token derivation — the single place where the 2-bit ladder is tuned
+// ---------------------------------------------------------------------------
+
 export function deriveTokens(src: SourceColors): ColorTokens {
-    const { bg, fg } = src;
+    const bg = normalizeHex(src.bg);
+    const fg = normalizeHex(src.fg);
     return {
+        // "sunken" = lower lightness in both polarities. Extrapolating away
+        // from fg made light-theme chrome whiter than the paper surface.
+        bgSunken: darken(bg, 0.03),
         bgBase: bg,
-        bgRaised: mix(bg, fg, 0.05),
-        bgSunken: mix(bg, fg, 0.02),
-        bgOverlay: withAlpha(bg, 0.9),
+        bgRaised: mix(bg, fg, 0.06),
+        bgWidget: mix(bg, fg, 0.10),
 
         fgPrimary: fg,
-        fgSecondary: mix(fg, bg, 0.30),
-        fgTertiary: mix(fg, bg, 0.55),
-        fgMuted: mix(fg, bg, 0.75),
+        fgSecondary: mix(fg, bg, 0.25),
+        fgTertiary: mix(fg, bg, 0.50),
+        fgMuted: mix(fg, bg, 0.70),
 
         invertBg: fg,
         invertFg: bg,
 
-        selectionBg: withAlpha(fg, 0.20),
-        highlightBg: withAlpha(fg, 0.08),
-        borderSubtle: withAlpha(fg, 0.15),
-        borderFocus: withAlpha(fg, 0.60),
+        // keep below fgMuted (= mix 0.30 from bg) so muted text stays readable on selections
+        selectionBg: mix(bg, fg, 0.20),
+        borderSubtle: mix(bg, fg, 0.15),
+        borderFocus: mix(bg, fg, 0.60),
+
+        alphaStrong: withAlpha(fg, 0.33),
+        alphaMid: withAlpha(fg, 0.16),
+        alphaFaint: withAlpha(fg, 0.07),
+        shadow: '#00000066',
     };
 }
 
@@ -122,102 +206,15 @@ export function toThemeJson(name: string, uiTheme: 'vs' | 'vs-dark' | 'hc-black'
     };
 }
 
-// Naive first pass — expand and tune over time
+// Resolve the full classification table against a derived palette.
+// Keys classified as null are deliberately left unset.
 export function mapWorkbenchColors(t: ColorTokens): Record<string, string> {
-    return {
-        // Editor core
-        'editor.background': t.bgBase,
-        'editor.foreground': t.fgPrimary,
-        'editor.selectionBackground': t.selectionBg,
-        'editor.selectionHighlightBackground': t.highlightBg,
-        'editor.wordHighlightBackground': t.highlightBg,
-        'editor.lineHighlightBackground': t.bgRaised,
-        'editorCursor.foreground': t.fgPrimary,
-        'editorWhitespace.foreground': t.fgMuted,
-        'editorIndentGuide.background1': t.borderSubtle,
-        'editorIndentGuide.activeBackground1': t.borderFocus,
-
-        // Sidebar
-        'sideBar.background': t.bgRaised,
-        'sideBar.foreground': t.fgSecondary,
-        'sideBar.border': t.borderSubtle,
-        'sideBarTitle.foreground': t.fgPrimary,
-
-        // Activity bar
-        'activityBar.background': t.bgSunken,
-        'activityBar.foreground': t.fgPrimary,
-        'activityBar.inactiveForeground': t.fgMuted,
-        'activityBar.border': t.borderSubtle,
-
-        // Status bar
-        'statusBar.background': t.invertBg,
-        'statusBar.foreground': t.invertFg,
-        'statusBar.border': t.borderSubtle,
-        'statusBarItem.hoverBackground': t.selectionBg,
-
-        // Tabs
-        'tab.activeBackground': t.bgBase,
-        'tab.activeForeground': t.fgPrimary,
-        'tab.inactiveBackground': t.bgRaised,
-        'tab.inactiveForeground': t.fgMuted,
-        'tab.border': t.borderSubtle,
-        'tab.activeBorder': t.fgPrimary,
-
-        // Title bar
-        'titleBar.activeBackground': t.bgSunken,
-        'titleBar.activeForeground': t.fgPrimary,
-        'titleBar.inactiveBackground': t.bgSunken,
-        'titleBar.inactiveForeground': t.fgMuted,
-        'titleBar.border': t.borderSubtle,
-
-        // Panel (terminal area)
-        'panel.background': t.bgSunken,
-        'panel.border': t.borderSubtle,
-        'panelTitle.activeForeground': t.fgPrimary,
-        'panelTitle.inactiveForeground': t.fgMuted,
-
-        // Terminal
-        'terminal.background': t.bgSunken,
-        'terminal.foreground': t.fgPrimary,
-        'terminalCursor.foreground': t.fgPrimary,
-
-        // Input / dropdowns
-        'input.background': t.bgSunken,
-        'input.foreground': t.fgPrimary,
-        'input.border': t.borderSubtle,
-        'input.placeholderForeground': t.fgMuted,
-        'inputOption.activeBorder': t.borderFocus,
-        'dropdown.background': t.bgOverlay,
-        'dropdown.foreground': t.fgPrimary,
-        'dropdown.border': t.borderSubtle,
-
-        // Lists / trees
-        'list.activeSelectionBackground': t.selectionBg,
-        'list.activeSelectionForeground': t.fgPrimary,
-        'list.inactiveSelectionBackground': t.highlightBg,
-        'list.hoverBackground': t.highlightBg,
-        'list.focusBackground': t.selectionBg,
-        'list.focusForeground': t.fgPrimary,
-
-        // Scrollbar
-        'scrollbarSlider.background': t.borderSubtle,
-        'scrollbarSlider.hoverBackground': t.borderFocus,
-        'scrollbarSlider.activeBackground': t.fgMuted,
-
-        // Badges / highlights
-        'badge.background': t.invertBg,
-        'badge.foreground': t.invertFg,
-
-        // Peek view
-        'peekView.border': t.borderFocus,
-        'peekViewEditor.background': t.bgSunken,
-        'peekViewResult.background': t.bgRaised,
-
-        // Notifications
-        'notifications.background': t.bgOverlay,
-        'notifications.foreground': t.fgPrimary,
-        'notifications.border': t.borderSubtle,
-    };
+    const out: Record<string, string> = {};
+    for (const [key, role] of Object.entries(workbenchClassification)) {
+        if (role === null) { continue; }
+        out[key] = t[role];
+    }
+    return out;
 }
 
 export function mapSemanticRules(t: ColorTokens): Record<string, SemanticTokenRule> {

@@ -1,7 +1,9 @@
-// VS Code workbench color tokens — 927 keys
-// Generated: 2026-04-19T12:32:45.909Z
+// VS Code workbench color tokens — 936 keys (0 deprecated keys skipped)
+// VS Code 1.124.0, generated 2026-06-11T08:33:35.930Z by `npm run extract-color-keys`
 
 actionBar.toggledBackground                                  // Background color for toggled action items in action bar.
+activeSessionView.background                                 // Background color of an active session view in the agent sessions window.
+activeSessionView.foreground                                 // Foreground color of an active session view in the agent sessions window.
 activityBar.activeBackground                                 // Activity bar background color for the active item. The activity bar is showing on the far left or right and allows to switch between views of the side bar.
 activityBar.activeBorder                                     // Activity bar border color for the active item. The activity bar is showing on the far left or right and allows to switch between views of the side bar.
 activityBar.activeFocusBorder                                // Activity bar focus border color for the active item. The activity bar is showing on the far left or right and allows to switch between views of the side bar.
@@ -22,11 +24,31 @@ activityErrorBadge.background                                // Background color
 activityErrorBadge.foreground                                // Foreground color of the error activity badge
 activityWarningBadge.background                              // Background color of the warning activity badge
 activityWarningBadge.foreground                              // Foreground color of the warning activity badge
+agentFeedbackInputWidget.border                              // Border color of the agent feedback input widget shown in the editor.
 agentSessionReadIndicator.foreground                         // Foreground color for the read indicator in an agent session.
 agentSessionSelectedBadge.border                             // Border color for the badges in selected agent session items.
 agentSessionSelectedUnfocusedBadge.border                    // Border color for the badges in selected agent session items when the view is unfocused.
 agentStatusIndicator.background                              // Background color of the agent status indicator in the titlebar.
-aiCustomizationManagement.sashBorder                         // The color of the Agent Customizations editor splitview sash border.
+agents.background                                            // Background color of the agent sessions window shell and gradient base.
+agentsBadge.background                                       // Background color of badges in the agent sessions window.
+agentsBadge.foreground                                       // Foreground color of badges in the agent sessions window.
+agentsChatInput.background                                   // Background color of the chat input field in the agent sessions window.
+agentsChatInput.border                                       // Border color of the chat input field in the agent sessions window.
+agentsChatInput.focusBorder                                  // Border color of the chat input field when focused in the agent sessions window.
+agentsChatInput.foreground                                   // Foreground color of the chat input field in the agent sessions window.
+agentsChatInput.placeholderForeground                        // Placeholder text color in the chat input field in the agent sessions window.
+agentsGradient.tintColor                                     // Tint color used in the background gradient of the agent sessions window shell.
+agentsNewSessionButton.background                            // Background color of the New Session button in the agent sessions sidebar.
+agentsNewSessionButton.border                                // Border color of the New Session button in the agent sessions sidebar.
+agentsNewSessionButton.foreground                            // Foreground color of the New Session button in the agent sessions sidebar.
+agentsNewSessionButton.hoverBackground                       // Background color of the New Session button when hovered in the agent sessions sidebar.
+agentsPanel.background                                       // Background color of the card panels (chat, files, terminal) in the agent sessions window.
+agentsPanel.border                                           // Border color of the card panels (chat, files, terminal) in the agent sessions window.
+agentsPanel.foreground                                       // Foreground color of the card panels (chat, files, terminal) in the agent sessions window.
+agentsUnreadBadge.background                                 // Background color of the unread sessions count badge on the sidebar toggle.
+agentsUnreadBadge.foreground                                 // Foreground color of the unread sessions count badge on the sidebar toggle.
+agentsUpdateButton.downloadedBackground                      // Background color of the update button when download is complete in the agent sessions window.
+agentsUpdateButton.downloadingBackground                     // Background color of the update button to show download progress in the agent sessions window.
 badge.background                                             // Badge background color. Badges are small information labels, e.g. for search results count.
 badge.foreground                                             // Badge foreground color. Badges are small information labels, e.g. for search results count.
 banner.background                                            // Banner background color. The banner is shown under the title bar of the window.
@@ -34,8 +56,8 @@ banner.foreground                                            // Banner foregroun
 banner.iconForeground                                        // Banner icon color. The banner is shown under the title bar of the window.
 breadcrumb.activeSelectionForeground                         // Color of selected breadcrumb items.
 breadcrumb.background                                        // Background color of breadcrumb items.
-breadcrumb.focusForeground                                   //
-breadcrumb.foreground                                        //
+breadcrumb.focusForeground                                   // Color of focused breadcrumb items.
+breadcrumb.foreground                                        // Color of focused breadcrumb items.
 breadcrumbPicker.background                                  // Background color of breadcrumb item picker.
 browser.border                                               // Border color for integrated browser pages.
 button.background                                            // Button background color.
@@ -62,6 +84,9 @@ chat.avatarBackground                                        // The background c
 chat.avatarForeground                                        // The foreground color of a chat avatar.
 chat.checkpointSeparator                                     // Chat checkpoint separator color.
 chat.editedFileForeground                                    // The foreground color of a chat edited file in the edited file list.
+chat.inputWorkingBorderColor1                                // First color stop of the animated chat input border shown while a request is in flight.
+chat.inputWorkingBorderColor2                                // Secondary accent color used by other animated chat input affordances. Not used by the in-flight chat input border.
+chat.inputWorkingBorderColor3                                // Tertiary accent color used by other animated chat input affordances. Not used by the in-flight chat input border.
 chat.linesAddedForeground                                    // Foreground color of lines added in chat code block pill.
 chat.linesRemovedForeground                                  // Foreground color of lines removed in chat code block pill.
 chat.requestBackground                                       // The background color of a chat request.
@@ -79,7 +104,6 @@ checkbox.disabled.foreground                                 // Foreground of a 
 checkbox.foreground                                          // Foreground color of checkbox widget.
 checkbox.selectBackground                                    // Background color of checkbox widget when the element it's in is selected.
 checkbox.selectBorder                                        // Border color of checkbox widget when the element it's in is selected.
-clangd.inactiveRegions.background                            // Background color of inactive code regions (used only if clangd.inactiveRegions.useBackgroundHighlight=true)
 commandCenter.activeBackground                               // Active background color of the command center
 commandCenter.activeBorder                                   // Active border color of the command center
 commandCenter.activeForeground                               // Active foreground color of the command center
@@ -112,8 +136,8 @@ debugIcon.restartForeground                                  // Debug toolbar ic
 debugIcon.startForeground                                    // Debug toolbar icon for start debugging.
 debugIcon.stepBackForeground                                 // Debug toolbar icon for step back.
 debugIcon.stepIntoForeground                                 // Debug toolbar icon for step into.
-debugIcon.stepOutForeground                                  //
-debugIcon.stepOverForeground                                 //
+debugIcon.stepOutForeground                                  // 
+debugIcon.stepOverForeground                                 // 
 debugIcon.stopForeground                                     // Debug toolbar icon for stop.
 debugTokenExpression.boolean                                 // Foreground color for booleans in the debug views (ie. the Variables or Watch view).
 debugTokenExpression.error                                   // Foreground color for expression errors in the debug views (ie. the Variables or Watch view) and for error logs shown in the debug console.
@@ -352,7 +376,7 @@ editorSuggestWidgetStatus.foreground                         // Foreground color
 editorUnicodeHighlight.background                            // Background color used to highlight unicode characters.
 editorUnicodeHighlight.border                                // Border color used to highlight unicode characters.
 editorUnnecessaryCode.border                                 // Border color of unnecessary (unused) source code in the editor.
-editorUnnecessaryCode.opacity                                // Opacity of unnecessary (unused) source code in the editor. For example, "#000000c0" will render the code with 75% opacity. For high contrast themes, use the  'editorUnnecessaryCode.border' theme color to underline unnecessary code instead of fading it out.
+editorUnnecessaryCode.opacity                                // Opacity of unnecessary (unused) source code in the editor. For example, "#000000c0" will render the code with 75% opacity. For high contrast themes, use the 'editorUnnecessaryCode.border' theme color to underline unnecessary code instead of fading it out.
 editorWarning.background                                     // Background color of warning text in the editor. The color must not be opaque so as not to hide underlying decorations.
 editorWarning.border                                         // If set, color of double underlines for warnings in the editor.
 editorWarning.foreground                                     // Foreground color of warning squigglies in the editor.
@@ -379,13 +403,6 @@ extensionIcon.starForeground                                 // The icon color f
 extensionIcon.verifiedForeground                             // The icon color for extension verified publisher.
 focusBorder                                                  // Overall border color for focused elements. This color is only used if not overridden by a component.
 foreground                                                   // Overall foreground color. This color is only used if not overridden by a component.
-gauge.background                                             // Gauge background color.
-gauge.border                                                 // Gauge border color.
-gauge.errorBackground                                        // Gauge error background color.
-gauge.errorForeground                                        // Gauge error foreground color.
-gauge.foreground                                             // Gauge foreground color.
-gauge.warningBackground                                      // Gauge warning background color.
-gauge.warningForeground                                      // Gauge warning foreground color.
 git.blame.editorDecorationForeground                         // Color for the blame editor decoration.
 gitDecoration.addedResourceForeground                        // Color for added resources.
 gitDecoration.conflictingResourceForeground                  // Color for resources with conflicts.
@@ -397,8 +414,9 @@ gitDecoration.stageDeletedResourceForeground                 // Color for delete
 gitDecoration.stageModifiedResourceForeground                // Color for modified resources which have been staged.
 gitDecoration.submoduleResourceForeground                    // Color for submodule resources.
 gitDecoration.untrackedResourceForeground                    // Color for untracked resources.
-github.issues.closed                                         // The color used for indicating that an issue is closed. Duplicates issues.closed because there's another extension that uses this identifier.
 icon.foreground                                              // The default color for icons in the workbench.
+inactiveSessionView.background                               // Background color of an inactive session view in the agent sessions window.
+inactiveSessionView.foreground                               // Foreground color of an inactive session view in the agent sessions window.
 inlineChat.background                                        // Background color of the interactive editor widget
 inlineChat.border                                            // Border color of the interactive editor widget
 inlineChat.foreground                                        // Foreground color of the interactive editor widget
@@ -448,9 +466,6 @@ inputValidation.warningBorder                                // Input validation
 inputValidation.warningForeground                            // Input validation foreground color for warning severity.
 interactive.activeCodeBorder                                 // The border color for the current interactive code cell when the editor has focus.
 interactive.inactiveCodeBorder                               // The border color for the current interactive code cell when the editor does not have focus.
-issues.closed                                                // The color used for indicating that an issue is closed.
-issues.newIssueDecoration                                    // The color used for the assignees and labels fields in a new issue editor.
-issues.open                                                  // The color used for indicating that an issue is open.
 keybindingLabel.background                                   // Keybinding label background color. The keybinding label is used to represent a keyboard shortcut.
 keybindingLabel.border                                       // Keybinding label border color. The keybinding label is used to represent a keyboard shortcut.
 keybindingLabel.bottomBorder                                 // Keybinding label border bottom color. The keybinding label is used to represent a keyboard shortcut.
@@ -512,12 +527,12 @@ mergeEditor.change.background                                // The background c
 mergeEditor.change.word.background                           // The background color for word changes.
 mergeEditor.changeBase.background                            // The background color for changes in base.
 mergeEditor.changeBase.word.background                       // The background color for word changes in base.
-mergeEditor.conflict.handled.minimapOverViewRuler            //
+mergeEditor.conflict.handled.minimapOverViewRuler            // The foreground color for changes in input 1.
 mergeEditor.conflict.handledFocused.border                   // The border color of handled focused conflicts.
 mergeEditor.conflict.handledUnfocused.border                 // The border color of handled unfocused conflicts.
 mergeEditor.conflict.input1.background                       // The background color of decorations in input 1.
 mergeEditor.conflict.input2.background                       // The background color of decorations in input 2.
-mergeEditor.conflict.unhandled.minimapOverViewRuler          //
+mergeEditor.conflict.unhandled.minimapOverViewRuler          // The foreground color for changes in input 1.
 mergeEditor.conflict.unhandledFocused.border                 // The border color of unhandled focused conflicts.
 mergeEditor.conflict.unhandledUnfocused.border               // The border color of unhandled unfocused conflicts.
 mergeEditor.conflictingLines.background                      // The background of the "Conflicting Lines" text.
@@ -560,9 +575,9 @@ notebookEditorOverviewRuler.runningCellForeground            // The color of the
 notebookScrollbarSlider.activeBackground                     // Notebook scrollbar slider background color when clicked on.
 notebookScrollbarSlider.background                           // Notebook scrollbar slider background color.
 notebookScrollbarSlider.hoverBackground                      // Notebook scrollbar slider background color when hovering.
-notebookStatusErrorIcon.foreground                           //
+notebookStatusErrorIcon.foreground                           // The error icon color of notebook cells in the cell status bar.
 notebookStatusRunningIcon.foreground                         // The running icon color of notebook cells in the cell status bar.
-notebookStatusSuccessIcon.foreground                         //
+notebookStatusSuccessIcon.foreground                         // The error icon color of notebook cells in the cell status bar.
 notificationCenter.border                                    // Notifications center border color. Notifications slide in from the bottom right of the window.
 notificationCenterHeader.background                          // Notifications center header background color. Notifications slide in from the bottom right of the window.
 notificationCenterHeader.foreground                          // Notifications center header foreground color. Notifications slide in from the bottom right of the window.
@@ -594,7 +609,7 @@ panelTitle.border                                            // Panel title bord
 panelTitle.inactiveForeground                                // Title color for the inactive panel. Panels are shown below the editor area and contain views like output and integrated terminal.
 panelTitleBadge.background                                   // Panel title badge background color. Panels are shown below the editor area and contain views like output and integrated terminal.
 panelTitleBadge.foreground                                   // Panel title badge foreground color. Panels are shown below the editor area and contain views like output and integrated terminal.
-peekView.border                                              //
+peekView.border                                              // Color of the peek view borders and arrow.
 peekViewEditor.background                                    // Background color of the peek view editor.
 peekViewEditor.matchHighlightBackground                      // Match highlight color in the peek view editor.
 peekViewEditor.matchHighlightBorder                          // Match highlight border in the peek view editor.
@@ -620,16 +635,12 @@ profileBadge.background                                      // Profile badge ba
 profileBadge.foreground                                      // Profile badge foreground color. The profile badge shows on top of the settings gear icon in the activity bar.
 profiles.sashBorder                                          // The color of the Profiles editor splitview sash border.
 progressBar.background                                       // Background color of the progress bar that can show for long running operations.
-pullRequests.closed                                          // The color used for indicating that a pull request is closed.
-pullRequests.draft                                           // The color used for indicating that a pull request is a draft.
-pullRequests.merged                                          // The color used for indicating that a pull request is merged.
-pullRequests.notification                                    // The color used for indicating a notification on a pull request
-pullRequests.open                                            // The color used for indicating that a pull request is open.
 quickInput.background                                        // Quick picker background color. The quick picker widget is the container for pickers like the command palette.
 quickInput.foreground                                        // Quick picker foreground color. The quick picker widget is the container for pickers like the command palette.
-quickInput.list.focusBackground                              //
+quickInput.list.focusBackground                              // 
 quickInputList.focusBackground                               // Quick picker background color for the focused item.
 quickInputList.focusForeground                               // Quick picker foreground color for the focused item.
+quickInputList.focusHighlightForeground                      // Quick picker foreground color of the match highlights on the focused item.
 quickInputList.focusIconForeground                           // Quick picker icon foreground color for the focused item.
 quickInputTitle.background                                   // Quick picker title background color. The quick picker widget is the container for pickers like the command palette.
 radio.activeBackground                                       // Background color of active radio option.
@@ -639,9 +650,6 @@ radio.inactiveBackground                                     // Background color
 radio.inactiveBorder                                         // Border color of the inactive radio option.
 radio.inactiveForeground                                     // Foreground color of inactive radio option.
 radio.inactiveHoverBackground                                // Background color of inactive active radio option when hovering.
-rainbowtrack1                                                // Color for column tracking one.
-rainbowtrack2                                                // Color for column tracking two.
-rainbowtrack3                                                // Color for column tracking three.
 sash.hoverBorder                                             // Border color of active sashes.
 scmGraph.foreground1                                         // Source control graph foreground color (1).
 scmGraph.foreground2                                         // Source control graph foreground color (2).
@@ -739,6 +747,7 @@ statusBarItem.warningBackground                              // Status bar warni
 statusBarItem.warningForeground                              // Status bar warning items foreground color. Warning items stand out from other status bar entries to indicate warning conditions. The status bar is shown in the bottom of the window.
 statusBarItem.warningHoverBackground                         // Status bar warning items background color when hovering. Warning items stand out from other status bar entries to indicate warning conditions. The status bar is shown in the bottom of the window.
 statusBarItem.warningHoverForeground                         // Status bar warning items foreground color when hovering. Warning items stand out from other status bar entries to indicate warning conditions. The status bar is shown in the bottom of the window.
+strongForeground                                             // Highest-contrast foreground color, intended for text or icons that need maximum legibility across various backgrounds. This color is only used if not overridden by a component.
 symbolIcon.arrayForeground                                   // The foreground color for array symbols. These symbols appear in the outline, breadcrumb, and suggest widget.
 symbolIcon.booleanForeground                                 // The foreground color for boolean symbols. These symbols appear in the outline, breadcrumb, and suggest widget.
 symbolIcon.classForeground                                   // The foreground color for class symbols. These symbols appear in the outline, breadcrumb, and suggest widget.
@@ -887,7 +896,7 @@ testing.message.info.decorationForeground                    // Text color of te
 testing.message.info.lineBackground                          // Margin color beside info messages shown inline in the editor.
 testing.messagePeekBorder                                    // Color of the peek view borders and arrow when peeking a logged message.
 testing.messagePeekHeaderBackground                          // Color of the peek view borders and arrow when peeking a logged message.
-testing.peekBorder                                           //
+testing.peekBorder                                           // Color of the peek view borders and arrow.
 testing.peekHeaderBackground                                 // Color of the peek view borders and arrow.
 testing.runAction                                            // Color for 'run' icons in the editor.
 testing.uncoveredBackground                                  // Background color of text that was not covered.

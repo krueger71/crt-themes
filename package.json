@@ -159,7 +159,9 @@
   "main": "./out/extension.js",
   "scripts": {
     "clean": "rm -rf build themes out",
-    "build": "npm run compile && mkdir -p themes && for x in 64 Amber Blue Custom Gray Green Red Paper; do node src/build.js $x > themes/CRT-$x-color-theme.json; done",
+    "build": "npm run compile && node out/build-themes.js",
+    "extract-color-keys": "npm run compile && node out/extract/runner.js",
+    "sync-classification": "npm run compile && node out/sync-classification.js",
     "package": "mkdir -p build && vsce package -o ./build",
     "vscode:prepublish": "npm run build",
     "compile": "tsc -p ./",
