@@ -38,18 +38,11 @@ Specific goals, in order:
 3. **CRT Custom dynamic theme** — a user-facing VS Code command lets the user pick their own `fg`/`bg`. The theme is applied as color customizations written into the user's `settings.json` (not as a `.json` theme file). Before writing, the extension backs up any existing `workbench.colorCustomizations` / `editor.tokenColorCustomizations` / `editor.semanticTokenColorCustomizations` values so they can be fully restored on reset.
 4. **Perceptually accurate mixing** — the opacity/mix levels in the 2-bit design system should be derived from luminance-based mixing grounded in color science (e.g. OKLCH or similar perceptually uniform space) rather than linear RGB interpolation, so the four "bit levels" feel evenly spaced to the human eye.
 
-When the `necromancer` work is complete, `src/crt.js` and `src/build.js` files can be deleted. Do not invest further effort in the legacy pipeline. The file `src/term.js` is a file that allows printing of colors in terminal and is used for visual tuning, should not be deleted. The file `src/crt.c` is just a file that is used to create screenshots of the theme in various settings. Don't delete that either.
+The legacy JS pipeline (`src/crt.js` + `src/build.js`) has been deleted. The file `src/term.js` is a standalone file that allows printing of colors in terminal and is used for visual tuning, should not be deleted. The file `src/crt.c` is just a file that is used to create screenshots of the theme in various settings. Don't delete that either. Neither is part of the build.
 
-## Architecture: two parallel pipelines (transitional state)
+## Architecture
 
-The repo is mid-migration. Both pipelines currently exist:
-
-### 1. Legacy pipeline (`src/crt.js` + `src/build.js`) — to be deleted
-No longer invoked by any npm script. `build.js` reads theme config from `package.json#config.themes` and passes `fg`/`bg` colors to `crtTemplate()` in `crt.js`, which derives a 16-level opacity ladder and maps workbench color attributes via a regex-based `color_map()` function. Kept only until the migration is fully validated.
-
-The `src/crt.c` and `src/term.js` files are references — not part of the build and not worth updating.
-
-### 2. New TypeScript pipeline (`src/theme.ts` + `src/classification.ts` + `src/build-themes.ts`) — wired into `npm run build`
+### Theme generation (`src/theme.ts` + `src/classification.ts` + `src/build-themes.ts`) — wired into `npm run build`
 `theme.ts` defines a structured `ColorTokens` interface — solid ladder rungs (bgSunken/bgBase/bgRaised/bgWidget, fgPrimary→fgMuted, invertBg/Fg, selectionBg, borderSubtle/Focus) plus a small `alpha*` group used only where VS Code's renderer requires translucency (stacking editor decorations, scrollbar sliders, shadows). `deriveTokens()` mixes all solids perceptually in OKLab. `src/classification.ts` assigns every workbench color key (from `src/colorKeys.txt`, regenerated via `npm run extract-color-keys`) a `TokenName` role or `null` (deliberately unset); it is meant to be hand-tuned — the table is the source of truth, and `npm run sync-classification` updates it for new VS Code versions without losing hand-tuned roles. `build-themes.ts` reads `package.json#config.themes`, writes `themes/CRT-<Name>-color-theme.json` for every entry, and warns about any colorKeys.txt key missing from the classification.
 
 ### Runtime extension (`src/extension.ts`)
@@ -66,4 +59,4 @@ Before the first overwrite, `applyDynamicTheme()` backs up any pre-existing `[CR
 
 ## Tests
 
-Tests live in `src/test/`. `crt.test.ts` tests the legacy JS helpers (`rgbaStrToArray`, `rgbaArrayToStr`, `opaque`, `opaqueRgb`) by importing from `../crt`. `extension.test.ts` covers the dynamic theme apply/backup/reset round-trip against the real global settings of the test instance, plus `normalizeHex` validation. Tests run inside a VS Code process via `@vscode/test-electron` — they cannot run headless without a display.
+Tests live in `src/test/`. `extension.test.ts` covers the dynamic theme apply/backup/reset round-trip against the real global settings of the test instance, plus `normalizeHex` validation. Tests run inside a VS Code process via `@vscode/test-electron` — they cannot run headless without a display.
