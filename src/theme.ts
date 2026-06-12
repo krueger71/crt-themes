@@ -10,11 +10,13 @@ export interface SourceColors {
 // for the handful of VS Code keys that must be translucent because the
 // renderer stacks them (editor decorations, scrollbar sliders, shadows).
 export interface ColorTokens {
-    // Backgrounds (bg side of the ladder)
+    // Backgrounds. In the flat retro look every surface is the raw bg;
+    // the four names are kept as distinct classification roles so the
+    // ladder can be re-expanded later by editing deriveTokens() alone.
     bgSunken: string;   // below base — panels/terminal/title bar wells
     bgBase: string;     // bg @ 100% — the editor surface
-    bgRaised: string;   // slightly toward fg — sidebars, hover, line highlight
-    bgWidget: string;   // further toward fg — floating widgets, menus, dropdowns
+    bgRaised: string;   // sidebars, hover, line highlight
+    bgWidget: string;   // floating widgets, menus, dropdowns
 
     // Foregrounds (fg side of the ladder)
     fgPrimary: string;   // fg @ 100%
@@ -26,8 +28,10 @@ export interface ColorTokens {
     invertBg: string;
     invertFg: string;
 
-    // Mid-ladder solids
-    selectionBg: string;   // opaque selection — text renders on top of it
+    // Solid highlight block for selections and hover highlights — the least
+    // intense fg rung. Keys classified selectionBg should pair their
+    // foreground with fgPrimary so text keeps contrast against the block.
+    selectionBg: string;
     borderSubtle: string;
     borderFocus: string;
 
@@ -157,12 +161,13 @@ export function deriveTokens(src: SourceColors): ColorTokens {
     const bg = normalizeHex(src.bg);
     const fg = normalizeHex(src.fg);
     return {
-        // "sunken" = lower lightness in both polarities. Extrapolating away
-        // from fg made light-theme chrome whiter than the paper surface.
-        bgSunken: darken(bg, 0.03),
+        // Flat retro: there is exactly one surface color — the raw bg.
+        // Elevation and grouping are expressed with borders, never with
+        // tinted background mixes.
+        bgSunken: bg,
         bgBase: bg,
-        bgRaised: mix(bg, fg, 0.06),
-        bgWidget: mix(bg, fg, 0.10),
+        bgRaised: bg,
+        bgWidget: bg,
 
         fgPrimary: fg,
         fgSecondary: mix(fg, bg, 0.25),
@@ -172,8 +177,9 @@ export function deriveTokens(src: SourceColors): ColorTokens {
         invertBg: fg,
         invertFg: bg,
 
-        // keep below fgMuted (= mix 0.30 from bg) so muted text stays readable on selections
-        selectionBg: mix(bg, fg, 0.20),
+        // = fgMuted: the faintest fg rung doubles as the highlight block,
+        // leaving fgPrimary text 0.70 of the full fg/bg contrast
+        selectionBg: mix(fg, bg, 0.70),
         borderSubtle: mix(bg, fg, 0.15),
         borderFocus: mix(bg, fg, 0.60),
 

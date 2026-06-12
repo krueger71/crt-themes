@@ -24,7 +24,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'activityBarBadge.background': 'invertBg',
     'activityBarBadge.foreground': 'invertFg',
     // activityBarTop
-    'activityBarTop.activeBackground': 'selectionBg',
+    'activityBarTop.activeBackground': null,
     'activityBarTop.activeBorder': 'borderFocus',
     'activityBarTop.background': 'bgBase',
     'activityBarTop.dropBorder': 'borderSubtle',
@@ -94,11 +94,11 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'button.background': 'invertBg',
     'button.border': null,
     'button.foreground': 'invertFg',
-    'button.hoverBackground': 'fgSecondary',
+    'button.hoverBackground': 'invertBg',
     'button.secondaryBackground': 'bgWidget',
     'button.secondaryBorder': 'borderSubtle',
     'button.secondaryForeground': 'fgPrimary',
-    'button.secondaryHoverBackground': 'selectionBg',
+    'button.secondaryHoverBackground': 'bgBase',
     'button.separator': 'invertFg',
     // chart
     'chart.axis': 'fgTertiary',
@@ -603,13 +603,13 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'list.focusHighlightForeground': 'fgPrimary',
     'list.focusOutline': 'borderFocus',
     'list.highlightForeground': 'fgPrimary',
-    'list.hoverBackground': 'bgRaised',
-    'list.hoverForeground': 'fgSecondary',
-    'list.inactiveFocusBackground': 'selectionBg',
+    'list.hoverBackground': 'selectionBg',
+    'list.hoverForeground': 'fgPrimary',
+    'list.inactiveFocusBackground': 'bgBase',
     'list.inactiveFocusOutline': 'borderFocus',
-    'list.inactiveSelectionBackground': 'bgWidget',
-    'list.inactiveSelectionForeground': 'fgSecondary',
-    'list.inactiveSelectionIconForeground': 'fgMuted',
+    'list.inactiveSelectionBackground': 'selectionBg',
+    'list.inactiveSelectionForeground': 'fgPrimary',
+    'list.inactiveSelectionIconForeground': 'fgPrimary',
     'list.invalidItemForeground': 'fgMuted',
     'list.warningForeground': 'fgSecondary',
     // listFilterWidget
@@ -634,7 +634,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'menu.selectionForeground': 'fgPrimary',
     'menu.separatorBackground': 'borderSubtle',
     // menubar
-    'menubar.selectionBackground': 'bgRaised',
+    'menubar.selectionBackground': 'selectionBg',
     'menubar.selectionBorder': null,
     'menubar.selectionForeground': 'fgPrimary',
     // merge
@@ -689,12 +689,12 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'notebook.cellStatusBarItemHoverBackground': 'bgRaised',
     'notebook.cellToolbarSeparator': 'fgTertiary',
     'notebook.editorBackground': 'bgBase',
-    'notebook.focusedCellBackground': 'selectionBg',
+    'notebook.focusedCellBackground': 'bgBase',
     'notebook.focusedCellBorder': 'borderSubtle',
     'notebook.focusedEditorBorder': 'borderSubtle',
     'notebook.inactiveFocusedCellBorder': 'borderSubtle',
     'notebook.inactiveSelectedCellBorder': 'borderSubtle',
-    'notebook.outputContainerBackgroundColor': 'fgTertiary',
+    'notebook.outputContainerBackgroundColor': 'bgBase',
     'notebook.outputContainerBorderColor': 'borderSubtle',
     'notebook.selectedCellBackground': 'bgBase',
     'notebook.selectedCellBorder': 'borderSubtle',
@@ -702,9 +702,9 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // notebookEditorOverviewRuler
     'notebookEditorOverviewRuler.runningCellForeground': 'fgSecondary',
     // notebookScrollbarSlider
-    'notebookScrollbarSlider.activeBackground': 'selectionBg',
-    'notebookScrollbarSlider.background': 'bgBase',
-    'notebookScrollbarSlider.hoverBackground': 'bgRaised',
+    'notebookScrollbarSlider.activeBackground': 'alphaStrong',
+    'notebookScrollbarSlider.background': 'alphaMid',
+    'notebookScrollbarSlider.hoverBackground': 'alphaStrong',
     // notebookStatusErrorIcon
     'notebookStatusErrorIcon.foreground': 'fgPrimary',
     // notebookStatusRunningIcon
@@ -817,7 +817,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'radio.activeBackground': 'selectionBg',
     'radio.activeBorder': 'borderFocus',
     'radio.activeForeground': 'fgPrimary',
-    'radio.inactiveBackground': 'selectionBg',
+    'radio.inactiveBackground': 'bgBase',
     'radio.inactiveBorder': 'borderFocus',
     'radio.inactiveForeground': 'fgMuted',
     'radio.inactiveHoverBackground': 'bgRaised',
@@ -851,7 +851,9 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'searchEditor.findMatchBorder': 'borderSubtle',
     'searchEditor.textInputBorder': 'borderSubtle',
     // selection
-    'selection.background': 'selectionBg',
+    // text fields can't recolor selected text, so solid fg would hide it —
+    // translucent fg is the only readable option here
+    'selection.background': 'alphaStrong',
     // settings
     'settings.checkboxBackground': 'bgBase',
     'settings.checkboxBorder': 'borderSubtle',
@@ -901,31 +903,34 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // statusBar
     'statusBar.background': 'invertBg',
     'statusBar.border': 'borderSubtle',
-    'statusBar.debuggingBackground': 'fgSecondary',
+    // debugging flips the status bar back to normal video so it reads as a
+    // distinct mode against the reverse-video default
+    'statusBar.debuggingBackground': 'bgBase',
     'statusBar.debuggingBorder': 'borderSubtle',
-    'statusBar.debuggingForeground': 'invertFg',
+    'statusBar.debuggingForeground': 'fgPrimary',
     'statusBar.focusBorder': 'invertFg',
     'statusBar.foreground': 'invertFg',
     'statusBar.noFolderBackground': 'invertBg',
     'statusBar.noFolderBorder': 'borderSubtle',
     'statusBar.noFolderForeground': 'invertFg',
     // statusBarItem
-    'statusBarItem.activeBackground': 'fgTertiary',
+    // items on the reverse-video status bar flip to normal video on hover
+    'statusBarItem.activeBackground': 'bgBase',
     'statusBarItem.compactHoverBackground': 'bgRaised',
     'statusBarItem.errorBackground': 'invertBg',
     'statusBarItem.errorForeground': 'invertFg',
     'statusBarItem.errorHoverBackground': 'bgRaised',
     'statusBarItem.errorHoverForeground': 'fgPrimary',
     'statusBarItem.focusBorder': 'borderFocus',
-    'statusBarItem.hoverBackground': 'fgSecondary',
-    'statusBarItem.hoverForeground': 'invertFg',
+    'statusBarItem.hoverBackground': 'bgBase',
+    'statusBarItem.hoverForeground': 'fgPrimary',
     'statusBarItem.offlineBackground': 'bgBase',
     'statusBarItem.offlineForeground': 'fgMuted',
     'statusBarItem.offlineHoverBackground': 'bgRaised',
     'statusBarItem.offlineHoverForeground': 'fgMuted',
-    'statusBarItem.prominentBackground': 'fgSecondary',
+    'statusBarItem.prominentBackground': 'invertBg',
     'statusBarItem.prominentForeground': 'invertFg',
-    'statusBarItem.prominentHoverBackground': 'fgTertiary',
+    'statusBarItem.prominentHoverBackground': 'bgBase',
     'statusBarItem.prominentHoverForeground': 'fgPrimary',
     'statusBarItem.remoteBackground': 'invertBg',
     'statusBarItem.remoteForeground': 'invertFg',
@@ -989,15 +994,15 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'tab.selectedBackground': 'selectionBg',
     'tab.selectedBorderTop': 'borderFocus',
     'tab.selectedForeground': 'fgPrimary',
-    'tab.unfocusedActiveBackground': 'selectionBg',
+    'tab.unfocusedActiveBackground': 'bgBase',
     'tab.unfocusedActiveBorder': 'borderFocus',
     'tab.unfocusedActiveBorderTop': 'fgMuted',
     'tab.unfocusedActiveForeground': 'fgMuted',
     'tab.unfocusedActiveModifiedBorder': 'borderSubtle',
-    'tab.unfocusedHoverBackground': 'selectionBg',
+    'tab.unfocusedHoverBackground': 'bgBase',
     'tab.unfocusedHoverBorder': 'borderSubtle',
     'tab.unfocusedHoverForeground': 'fgMuted',
-    'tab.unfocusedInactiveBackground': 'selectionBg',
+    'tab.unfocusedInactiveBackground': 'bgBase',
     'tab.unfocusedInactiveForeground': 'fgMuted',
     'tab.unfocusedInactiveModifiedBorder': 'borderSubtle',
     // terminal
@@ -1029,7 +1034,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'terminal.inactiveSelectionBackground': 'alphaMid',
     'terminal.initialHintForeground': 'fgTertiary',
     'terminal.selectionBackground': 'selectionBg',
-    'terminal.selectionForeground': 'fgSecondary',
+    'terminal.selectionForeground': 'fgPrimary',
     'terminal.tab.activeBorder': 'borderFocus',
     // terminalCommandDecoration
     'terminalCommandDecoration.defaultBackground': 'bgBase',
@@ -1125,8 +1130,10 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'titleBar.inactiveBackground': 'bgSunken',
     'titleBar.inactiveForeground': 'fgMuted',
     // toolbar
+    // toolbar icons keep their own color, but they stay visible on the
+    // muted highlight block
     'toolbar.activeBackground': 'selectionBg',
-    'toolbar.hoverBackground': 'bgRaised',
+    'toolbar.hoverBackground': 'selectionBg',
     'toolbar.hoverOutline': null,
     // tree
     'tree.inactiveIndentGuidesStroke': 'borderSubtle',

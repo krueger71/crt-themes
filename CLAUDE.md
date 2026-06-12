@@ -60,3 +60,8 @@ Before the first overwrite, `applyDynamicTheme()` backs up any pre-existing `[CR
 ## Tests
 
 Tests live in `src/test/`. `extension.test.ts` covers the dynamic theme apply/backup/reset round-trip against the real global settings of the test instance, plus `normalizeHex` validation. Tests run inside a VS Code process via `@vscode/test-electron` — they cannot run headless without a display.
+
+## Reference
+
+The reference for VS Code colors lives here and should be consulted for UX guidelines and influence the theme generation (as much as possible, given the limitations of a 2-bit design system): https://code.visualstudio.com/api/references/theme-color
+
