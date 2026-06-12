@@ -70,8 +70,23 @@ export interface SemanticTokenRule {
 
 // ---------------------------------------------------------------------------
 // Color math — sRGB <-> OKLab so mixing is perceptually uniform
+//
+// All blending happens in OKLab (Björn Ottosson, 2020,
+// https://bottosson.github.io/posts/oklab/), a color space designed so that
+// equal numeric steps look like equal visual steps. Naive blending in 8-bit
+// sRGB fails at this twice: sRGB values are gamma-encoded (so averaging them
+// doesn't even average physical light), and even physically-linear light
+// doesn't match how the eye perceives lightness differences. OKLab fixes the
+// first by converting through linear RGB, and the second with a cube-root
+// response curve modeled on human vision. The payoff here: the fg ladder's
+// 0.25/0.50/0.70 mix fractions land as evenly-spaced perceived intensities
+// for any fg/bg pair the user picks.
 // ---------------------------------------------------------------------------
 
+/**
+ * Validate a CSS-style hex color and expand it to lowercase #rrggbb.
+ * Accepts #rgb and #rrggbb, with or without the leading '#'.
+ */
 export function normalizeHex(hex: string): string {
     const m = /^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.exec(hex.trim());
     if (!m) {
@@ -84,29 +99,50 @@ export function normalizeHex(hex: string): string {
     return '#' + h;
 }
 
+/** Parse #rrggbb into its three 0–255 channel values. */
 function hexToRgb(hex: string): [number, number, number] {
     const n = parseInt(normalizeHex(hex).slice(1), 16);
     return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
 }
 
+/**
+ * Format three channel values as #rrggbb. Values are rounded and clamped to
+ * 0–255, which is also what clips out-of-gamut OKLab results back to sRGB.
+ */
 function rgbToHex(r: number, g: number, b: number): string {
     return '#' + [r, g, b]
         .map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0'))
         .join('');
 }
 
+/**
+ * Decode one 0–255 sRGB channel to linear light in 0–1. This is the standard
+ * sRGB transfer function (IEC 61966-2-1): a short linear segment near black,
+ * then a 2.4-exponent power curve. Stored sRGB values are gamma-encoded, so
+ * any physically meaningful math has to happen on this linear form.
+ */
 function srgbToLinear(c: number): number {
     const v = c / 255;
     return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
 }
 
+/** Inverse of srgbToLinear: encode linear light back to a 0–255 sRGB channel. */
 function linearToSrgb(v: number): number {
     const c = v <= 0.0031308 ? v * 12.92 : 1.055 * Math.pow(v, 1 / 2.4) - 0.055;
     return c * 255;
 }
 
+// [L, a, b]: L = perceived lightness (0 black .. 1 white), a/b = the two
+// opponent chroma axes (green–red / blue–yellow). For our monochrome mixes
+// a and b mostly just carry the hue tint along while L does the work.
 type OkLab = [number, number, number];
 
+/**
+ * sRGB hex -> OKLab. Two matrix steps with a cube root in between, using the
+ * constants published in Ottosson's reference implementation: linear sRGB is
+ * projected onto an LMS-like cone response, the cube root applies the
+ * perceptual lightness curve, and the second matrix maps that to [L, a, b].
+ */
 function hexToOklab(hex: string): OkLab {
     const [r8, g8, b8] = hexToRgb(hex);
     const r = srgbToLinear(r8), g = srgbToLinear(g8), b = srgbToLinear(b8);
@@ -120,6 +156,10 @@ function hexToOklab(hex: string): OkLab {
     ];
 }
 
+/**
+ * OKLab -> sRGB hex: the inverse matrices, with cubing undoing the cube
+ * root. Results outside the sRGB gamut are clamped per channel in rgbToHex.
+ */
 function oklabToHex([L, a, b]: OkLab): string {
     const l = Math.pow(L + 0.3963377774 * a + 0.2158037573 * b, 3);
     const m = Math.pow(L - 0.1055613458 * a - 0.0638541728 * b, 3);
@@ -131,14 +171,23 @@ function oklabToHex([L, a, b]: OkLab): string {
     );
 }
 
-// Step a color down in perceptual lightness, keeping its hue/chroma.
-// Clamps at the gamut edge (a pure-black bg stays black).
+/**
+ * Step a color down in perceptual lightness by dL (OKLab L units, where the
+ * whole black-to-white range is 1.0), keeping its hue/chroma. Clamps at the
+ * gamut edge (a pure-black bg stays black).
+ */
 export function darken(hex: string, dL: number): string {
     const [L, a, b] = hexToOklab(hex);
     return oklabToHex([Math.max(0, L - dL), a, b]);
 }
 
-// Perceptual mix; t may extrapolate outside [0,1] (result clamped to gamut)
+/**
+ * Perceptual mix: straight-line interpolation between the two colors in
+ * OKLab, so t=0.5 looks halfway between them rather than being a numeric
+ * average of gamma-encoded bytes. t may extrapolate outside [0,1] (result
+ * clamped to gamut). This is what makes the ladder fractions in
+ * deriveTokens() hold visually for any user-picked fg/bg pair.
+ */
 export function mix(hex1: string, hex2: string, t: number): string {
     const a = hexToOklab(hex1);
     const b = hexToOklab(hex2);
@@ -149,6 +198,11 @@ export function mix(hex1: string, hex2: string, t: number): string {
     ]);
 }
 
+/**
+ * Append an alpha channel (0–1) to a hex color, producing #rrggbbaa. Unlike
+ * mix(), the final color is composited by VS Code's renderer at draw time,
+ * so these stack — which is exactly why the alpha* tokens exist.
+ */
 export function withAlpha(hex: string, alpha: number): string {
     return normalizeHex(hex) + Math.round(alpha * 255).toString(16).padStart(2, '0');
 }
@@ -157,6 +211,18 @@ export function withAlpha(hex: string, alpha: number): string {
 // Token derivation — the single place where the 2-bit ladder is tuned
 // ---------------------------------------------------------------------------
 
+/**
+ * Derive the full ColorTokens palette from the user's two source colors.
+ * All mix fractions and alpha levels live here and nowhere else:
+ *
+ * - fg ladder: perceptual mixes toward bg at 0 / 0.25 / 0.50 / 0.70 — the
+ *   four "bit levels" of the design system.
+ * - backgrounds: every surface is the raw bg (flat retro); depth is drawn
+ *   with borders instead of tinted fills.
+ * - selectionBg: the faintest fg rung reused as a solid highlight block.
+ * - alpha*: translucent fg at three strengths, for keys VS Code composites
+ *   over other content (decorations, scrollbar sliders).
+ */
 export function deriveTokens(src: SourceColors): ColorTokens {
     const bg = normalizeHex(src.bg);
     const fg = normalizeHex(src.fg);
@@ -190,6 +256,11 @@ export function deriveTokens(src: SourceColors): ColorTokens {
     };
 }
 
+/**
+ * Generate everything a theme needs (workbench colors, TextMate rules,
+ * semantic token rules) from a fg/bg pair. Used by both the static theme
+ * builder and the dynamic CRT Custom feature in extension.ts.
+ */
 export function generateTheme(src: SourceColors): GeneratedTheme {
     const tokens = deriveTokens(src);
     return {
@@ -199,7 +270,11 @@ export function generateTheme(src: SourceColors): GeneratedTheme {
     };
 }
 
-// Serialize to the .json format VS Code expects for a theme file
+/**
+ * Serialize a generated theme to the object shape VS Code expects in a
+ * *-color-theme.json file. `uiTheme` is the value from the theme's
+ * package.json contribution and decides the light/dark type flag.
+ */
 export function toThemeJson(name: string, uiTheme: 'vs' | 'vs-dark' | 'hc-black', src: SourceColors) {
     const { workbenchColors, textMateRules, semanticRules } = generateTheme(src);
     return {
@@ -212,8 +287,12 @@ export function toThemeJson(name: string, uiTheme: 'vs' | 'vs-dark' | 'hc-black'
     };
 }
 
-// Resolve the full classification table against a derived palette.
-// Keys classified as null are deliberately left unset.
+/**
+ * Resolve the full classification table against a derived palette: every
+ * workbench key gets the concrete value of its assigned role. Keys
+ * classified as null are deliberately left unset so VS Code falls back to
+ * its own defaults/derived values.
+ */
 export function mapWorkbenchColors(t: ColorTokens): Record<string, string> {
     const out: Record<string, string> = {};
     for (const [key, role] of Object.entries(workbenchClassification)) {
@@ -223,6 +302,13 @@ export function mapWorkbenchColors(t: ColorTokens): Record<string, string> {
     return out;
 }
 
+/**
+ * Semantic-token highlighting (used when a language server provides tokens;
+ * takes precedence over the TextMate rules below). Kept deliberately coarse:
+ * keywords/functions at full intensity, types and literals one rung down,
+ * variables two rungs down, comments at the faintest rung — syntax "color"
+ * is expressed as intensity plus bold/italic, like a real terminal.
+ */
 export function mapSemanticRules(t: ColorTokens): Record<string, SemanticTokenRule> {
     return {
         'comment': { foreground: t.fgMuted, italic: true },
@@ -246,6 +332,11 @@ export function mapSemanticRules(t: ColorTokens): Record<string, SemanticTokenRu
     };
 }
 
+/**
+ * TextMate-scope highlighting — the grammar-based fallback that covers
+ * languages (and the many cases) where no semantic tokens are available.
+ * Mirrors the intensity scheme of mapSemanticRules.
+ */
 export function mapTextMateRules(t: ColorTokens): TextMateRule[] {
     return [
         {
