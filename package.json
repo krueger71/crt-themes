@@ -41,8 +41,8 @@
       },
       "CRT Custom": {
         "type": "dark",
-        "fg": "#ffffff",
-        "bg": "#000000"
+        "fg": "#fecc02",
+        "bg": "#006aa7"
       },
       "CRT Gray": {
         "type": "dark",
@@ -84,13 +84,13 @@
         "crt-themes.background": {
           "type": "string",
           "format": "color-hex",
-          "default": "#000000",
+          "default": "#006aa7",
           "description": "Background color for CRT Custom theme"
         },
         "crt-themes.foreground": {
           "type": "string",
           "format": "color-hex",
-          "default": "#ffffff",
+          "default": "#fecc02",
           "description": "Foreground color for CRT Custom theme"
         },
         "crt-themes.dynamic": {

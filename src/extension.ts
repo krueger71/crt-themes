@@ -3,6 +3,11 @@ import { SourceColors, generateTheme, normalizeHex } from './theme';
 
 const THEME_NAME = 'CRT Custom';
 const THEME_KEY = `[${THEME_NAME}]`;
+
+// Fallbacks mirror the contributed defaults in package.json; used only if
+// those defaults are somehow absent.
+const DEFAULT_FG = '#fecc02';
+const DEFAULT_BG = '#006aa7';
 const SECTIONS = [
 	'workbench.colorCustomizations',
 	'editor.tokenColorCustomizations',
@@ -33,8 +38,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 			if (!dynamic) { return; }
 
-			const bg = cfg.get<string>('background', '#000000');
-			const fg = cfg.get<string>('foreground', '#ffffff');
+			const bg = cfg.get<string>('background', DEFAULT_BG);
+			const fg = cfg.get<string>('foreground', DEFAULT_FG);
 			try {
 				await applyCustomTheme({ bg, fg });
 			} catch (err) {
@@ -65,9 +70,9 @@ async function promptColor(prompt: string, value: string): Promise<string | unde
 export async function modifyCustomTheme(): Promise<void> {
 	const cfg = vscode.workspace.getConfiguration('crt-themes');
 
-	const fg = await promptColor('Foreground color', cfg.get<string>('foreground', '#ffffff'));
+	const fg = await promptColor('Foreground color', cfg.get<string>('foreground', DEFAULT_FG));
 	if (fg === undefined) { return; }
-	const bg = await promptColor('Background color', cfg.get<string>('background', '#000000'));
+	const bg = await promptColor('Background color', cfg.get<string>('background', DEFAULT_BG));
 	if (bg === undefined) { return; }
 
 	await cfg.update('foreground', fg, vscode.ConfigurationTarget.Global);
