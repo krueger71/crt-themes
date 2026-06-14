@@ -46,9 +46,9 @@ The legacy JS pipeline (`src/crt.js` + `src/build.js`) has been deleted. The fil
 `theme.ts` defines a structured `ColorTokens` interface — solid ladder rungs (bgSunken/bgBase/bgRaised/bgWidget, fgPrimary→fgMuted, invertBg/Fg, selectionBg, borderSubtle/Focus) plus a small `alpha*` group used only where VS Code's renderer requires translucency (stacking editor decorations, scrollbar sliders, shadows). `deriveTokens()` mixes all solids perceptually in OKLab. `src/classification.ts` assigns every workbench color key (from `src/colorKeys.txt`, regenerated via `npm run extract-color-keys`) a `TokenName` role or `null` (deliberately unset); it is meant to be hand-tuned — the table is the source of truth, and `npm run sync-classification` updates it for new VS Code versions without losing hand-tuned roles. `build-themes.ts` reads `package.json#config.themes`, writes `themes/CRT-<Name>-color-theme.json` for every entry, and warns about any colorKeys.txt key missing from the classification.
 
 ### Runtime extension (`src/extension.ts`)
-The extension activates to support the **CRT Custom** theme's dynamic mode. When `crt-themes.dynamicApplication` is true, changing `crt-themes.foreground` or `crt-themes.background` triggers `applyDynamicTheme()`, which calls `generateTheme()` from `src/theme.ts` and writes the result to VS Code's global `workbench.colorCustomizations`, `editor.tokenColorCustomizations`, and `editor.semanticTokenColorCustomizations`. The `resetCustomizations` command removes those keys. The new TypeScript pipeline is already powering the live dynamic feature.
+The extension activates to support the **CRT Custom** theme's dynamic mode. When `crt-themes.dynamic` is true, changing `crt-themes.foreground` or `crt-themes.background` triggers `applyDynamicTheme()`, which calls `generateTheme()` from `src/theme.ts` and writes the result to VS Code's global `workbench.colorCustomizations`, `editor.tokenColorCustomizations`, and `editor.semanticTokenColorCustomizations`.
 
-Before the first overwrite, `applyDynamicTheme()` backs up any pre-existing `[CRT Custom]` blocks into `context.globalState`; `resetCustomizations` restores them (or removes the blocks if nothing pre-existed). All settings writes go through `inspect().globalValue` rather than `get()` so workspace-scoped values never leak into user settings. The `createCustomTheme` command prompts for fg/bg, saves them, applies the theme, and switches `workbench.colorTheme` to CRT Custom.
+All settings writes go through `inspect().globalValue` rather than `get()` so workspace-scoped values never leak into user settings. The `modifyCustomTheme` command prompts for fg/bg, saves them, applies the theme, and switches `workbench.colorTheme` to CRT Custom.
 
 ## Adding or modifying a theme
 
@@ -59,9 +59,8 @@ Before the first overwrite, `applyDynamicTheme()` backs up any pre-existing `[CR
 
 ## Tests
 
-Tests live in `src/test/`. `extension.test.ts` covers the dynamic theme apply/backup/reset round-trip against the real global settings of the test instance, plus `normalizeHex` validation. Tests run inside a VS Code process via `@vscode/test-electron` — they cannot run headless without a display.
+Tests live in `src/test/`. `extension.test.ts` covers the dynamic theme apply round-trip against the real global settings of the test instance, plus `normalizeHex` validation. Tests run inside a VS Code process via `@vscode/test-electron` — they cannot run headless without a display.
 
 ## Reference
 
 The reference for VS Code colors lives here and should be consulted for UX guidelines and influence the theme generation (as much as possible, given the limitations of a 2-bit design system): https://code.visualstudio.com/api/references/theme-color
-

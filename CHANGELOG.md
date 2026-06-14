@@ -16,12 +16,9 @@ look of every theme changes with this update.
   highlights are solid blocks of the lowest foreground intensity; the status
   bar, badges and buttons render in full reverse video.
 - New **CRT Custom** dynamic theme: pick your own foreground/background with
-  the *CRT Themes: Create custom theme* command, or edit the
-  `crt-themes.foreground` / `crt-themes.background` settings with
-  `crt-themes.dynamicApplication` enabled to restyle the workbench live.
-- Safe by default: before CRT Custom writes any color customizations to your
-  settings, existing values are backed up. *CRT Themes: Reset Custom
-  Overrides* restores them exactly.
+  the *CRT Themes: Modify custom theme* command, or edit the
+  `crt-themes.foreground` / `crt-themes.background` settings — with
+  `crt-themes.dynamic` enabled (the default) the workbench restyles live.
 - Fixed the red theme file name issue.
 
 ## [0.5.2] - 2020-06-27

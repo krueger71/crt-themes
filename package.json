@@ -93,25 +93,17 @@
           "default": "#ffffff",
           "description": "Foreground color for CRT Custom theme"
         },
-        "crt-themes.dynamicApplication": {
+        "crt-themes.dynamic": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Automatically apply CRT Custom colors to your settings.json"
         }
       }
     },
     "commands": [
       {
-        "command": "crt-themes.showColorKeys",
-        "title": "CRT Themes: Show available color keys in a new window"
-      },
-      {
-        "command": "crt-themes.createCustomTheme",
-        "title": "CRT Themes: Create custom theme"
-      },
-      {
-        "command": "crt-themes.resetCustomizations",
-        "title": "CRT Themes: Reset Custom Overrides"
+        "command": "crt-themes.modifyCustomTheme",
+        "title": "CRT Themes: Modify custom theme"
       }
     ],
     "themes": [
@@ -181,7 +173,7 @@
     "@vscode/test-cli": "^0.0.12",
     "@vscode/test-electron": "^3.0.0",
     "@vscode/vsce": "^3.9.2",
-    "eslint": "^10.4.1",
+    "eslint": "^10.5.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.61.0"
   }

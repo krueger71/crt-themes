@@ -1,3 +1,5 @@
+CLAUDE.md
+.claude/**
 .vscode/**
 .vscode-test/**
 src/**
@@ -12,5 +14,9 @@ src/**
 node_modules/**
 build/**
 out/test/**
+out/build-themes.js
+out/sync-classification.js
+out/term.js
+out/extract/**
 media/**
 !media/icon.png
