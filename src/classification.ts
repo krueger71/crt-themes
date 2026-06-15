@@ -118,19 +118,19 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'chat.avatarForeground': 'fgSecondary',
     'chat.checkpointSeparator': 'fgTertiary',
     'chat.editedFileForeground': 'fgSecondary',
-    'chat.inputWorkingBorderColor1': 'borderSubtle',
-    'chat.inputWorkingBorderColor2': 'borderSubtle',
-    'chat.inputWorkingBorderColor3': 'borderSubtle',
-    'chat.linesAddedForeground': 'fgSecondary',
-    'chat.linesRemovedForeground': 'fgSecondary',
+    'chat.inputWorkingBorderColor1': 'alphaMid', // must be translucent
+    'chat.inputWorkingBorderColor2': 'alphaMid', // must be translucent
+    'chat.inputWorkingBorderColor3': 'alphaMid', // must be translucent
+    'chat.linesAddedForeground': 'alphaText', // must be translucent (keeps monochrome vs. default green)
+    'chat.linesRemovedForeground': 'alphaText', // must be translucent (keeps monochrome vs. default red)
     'chat.requestBackground': 'bgWidget',
     'chat.requestBorder': 'borderSubtle',
-    'chat.requestBubbleBackground': 'bgWidget',
-    'chat.requestBubbleHoverBackground': 'bgRaised',
-    'chat.requestCodeBorder': 'borderSubtle',
+    'chat.requestBubbleBackground': 'alphaFaint', // must be translucent
+    'chat.requestBubbleHoverBackground': 'alphaMid', // must be translucent
+    'chat.requestCodeBorder': 'alphaMid', // must be translucent
     'chat.slashCommandBackground': 'bgWidget',
     'chat.slashCommandForeground': 'fgSecondary',
-    'chat.thinkingShimmer': 'fgTertiary',
+    'chat.thinkingShimmer': 'alphaStrong', // must be translucent (shimmer effect)
     // checkbox
     'checkbox.background': 'bgSunken',
     'checkbox.border': 'borderSubtle',
@@ -145,7 +145,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'commandCenter.activeForeground': 'fgPrimary',
     'commandCenter.background': 'bgBase',
     'commandCenter.border': 'borderSubtle',
-    'commandCenter.debuggingBackground': 'bgBase',
+    'commandCenter.debuggingBackground': 'alphaFaint', // must be translucent
     'commandCenter.foreground': 'fgSecondary',
     'commandCenter.inactiveBorder': 'borderFocus',
     'commandCenter.inactiveForeground': 'fgMuted',
@@ -237,9 +237,9 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'editor.findMatchForeground': 'fgSecondary',
     'editor.findMatchHighlightBackground': 'alphaMid',
     'editor.findMatchHighlightBorder': null,
-    'editor.findMatchHighlightForeground': 'fgPrimary',
+    'editor.findMatchHighlightForeground': null, // must be translucent; unset falls back to monochrome fg
     'editor.findRangeHighlightBackground': 'alphaFaint',
-    'editor.findRangeHighlightBorder': 'borderSubtle',
+    'editor.findRangeHighlightBorder': 'alphaMid', // must be translucent
     'editor.focusedStackFrameHighlightBackground': 'alphaStrong',
     'editor.foldBackground': 'alphaFaint',
     'editor.foldPlaceholderForeground': 'fgMuted',
@@ -278,7 +278,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'editorActionList.focusForeground': 'fgPrimary',
     'editorActionList.foreground': 'fgSecondary',
     // editorActiveLineNumber
-    'editorActiveLineNumber.foreground': 'fgPrimary',
+    'editorActiveLineNumber.foreground': null, // deprecated -> editorLineNumber.activeForeground
     // editorBracketHighlight
     'editorBracketHighlight.foreground1': 'fgPrimary',
     'editorBracketHighlight.foreground2': 'fgPrimary',
@@ -361,14 +361,14 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'editorHoverWidget.highlightForeground': 'fgPrimary',
     'editorHoverWidget.statusBarBackground': 'bgRaised',
     // editorIndentGuide
-    'editorIndentGuide.activeBackground': 'selectionBg',
+    'editorIndentGuide.activeBackground': null, // deprecated -> editorIndentGuide.activeBackground1
     'editorIndentGuide.activeBackground1': 'selectionBg',
     'editorIndentGuide.activeBackground2': 'selectionBg',
     'editorIndentGuide.activeBackground3': 'selectionBg',
     'editorIndentGuide.activeBackground4': 'selectionBg',
     'editorIndentGuide.activeBackground5': 'selectionBg',
     'editorIndentGuide.activeBackground6': 'selectionBg',
-    'editorIndentGuide.background': 'bgBase',
+    'editorIndentGuide.background': null, // deprecated -> editorIndentGuide.background1
     'editorIndentGuide.background1': 'bgBase',
     'editorIndentGuide.background2': 'bgBase',
     'editorIndentGuide.background3': 'bgBase',
@@ -550,10 +550,10 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'inlineEdit.modifiedBorder': 'borderSubtle',
     'inlineEdit.modifiedChangedLineBackground': 'alphaFaint',
     'inlineEdit.modifiedChangedTextBackground': 'alphaFaint',
-    'inlineEdit.originalBackground': 'bgBase',
+    'inlineEdit.originalBackground': 'alphaFaint', // must be translucent
     'inlineEdit.originalBorder': 'borderSubtle',
-    'inlineEdit.originalChangedLineBackground': 'bgBase',
-    'inlineEdit.originalChangedTextBackground': 'bgBase',
+    'inlineEdit.originalChangedLineBackground': 'alphaFaint', // must be translucent
+    'inlineEdit.originalChangedTextBackground': 'alphaMid', // must be translucent
     'inlineEdit.tabWillAcceptModifiedBorder': 'borderSubtle',
     'inlineEdit.tabWillAcceptOriginalBorder': 'borderSubtle',
     // input
@@ -805,7 +805,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // quickInput
     'quickInput.background': 'bgWidget',
     'quickInput.foreground': 'fgSecondary',
-    'quickInput.list.focusBackground': 'selectionBg',
+    'quickInput.list.focusBackground': null, // deprecated -> quickInputList.focusBackground
     // quickInputList
     'quickInputList.focusBackground': 'selectionBg',
     'quickInputList.focusForeground': 'fgPrimary',

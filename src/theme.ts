@@ -36,6 +36,9 @@ export interface ColorTokens {
     borderFocus: string;
 
     // Translucent — only for keys VS Code composites over other decorations
+    alphaText: string;   // near-opaque fg: readable as text, but not 100%
+                         // opaque, for *foreground* keys VS Code requires
+                         // translucent (e.g. chat diff line colors)
     alphaStrong: string;
     alphaMid: string;
     alphaFaint: string;
@@ -238,17 +241,18 @@ export function deriveTokens(src: SourceColors): ColorTokens {
         fgPrimary: fg,
         fgSecondary: mix(fg, bg, 0.25),
         fgTertiary: mix(fg, bg, 0.50),
-        fgMuted: mix(fg, bg, 0.70),
+        fgMuted: mix(fg, bg, 0.75),
 
         invertBg: fg,
         invertFg: bg,
 
         // = fgMuted: the faintest fg rung doubles as the highlight block,
         // leaving fgPrimary text 0.70 of the full fg/bg contrast
-        selectionBg: mix(fg, bg, 0.70),
-        borderSubtle: mix(bg, fg, 0.15),
-        borderFocus: mix(bg, fg, 0.60),
+        selectionBg: withAlpha(fg, 0.50), //mix(fg, bg, 0.75),
+        borderSubtle: mix(bg, fg, 0.25),
+        borderFocus: mix(bg, fg, 0.75),
 
+        alphaText: withAlpha(fg, 0.90),
         alphaStrong: withAlpha(fg, 0.33),
         alphaMid: withAlpha(fg, 0.16),
         alphaFaint: withAlpha(fg, 0.07),
