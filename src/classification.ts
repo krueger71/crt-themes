@@ -94,7 +94,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'button.background': 'invertBg',
     'button.border': null,
     'button.foreground': 'invertFg',
-    'button.hoverBackground': 'invertBg',
+    'button.hoverBackground': 'invertBgHover', // subtle hover on the inverted button
     'button.secondaryBackground': 'bgWidget',
     'button.secondaryBorder': 'borderSubtle',
     'button.secondaryForeground': 'fgPrimary',
@@ -249,7 +249,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'editor.inactiveSelectionBackground': 'alphaMid',
     'editor.inlineValuesBackground': 'bgBase',
     'editor.inlineValuesForeground': 'fgSecondary',
-    'editor.lineHighlightBackground': 'bgRaised',
+    'editor.lineHighlightBackground': 'alphaMid',
     'editor.lineHighlightBorder': null,
     'editor.linkedEditingBackground': 'alphaFaint',
     'editor.placeholder.foreground': 'fgMuted',
@@ -914,12 +914,15 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'statusBar.noFolderBorder': 'borderSubtle',
     'statusBar.noFolderForeground': 'invertFg',
     // statusBarItem
-    // items on the reverse-video status bar flip to normal video on hover
+    // generic items sit on the reverse-video bar and flip to normal video on
+    // hover; the alert items (error/warning/remote/prominent) sit in normal
+    // video at rest so they punch through the reverse-video bar, then brighten
+    // to the selection block on hover
     'statusBarItem.activeBackground': 'bgBase',
     'statusBarItem.compactHoverBackground': 'bgRaised',
-    'statusBarItem.errorBackground': 'invertBg',
-    'statusBarItem.errorForeground': 'invertFg',
-    'statusBarItem.errorHoverBackground': 'bgRaised',
+    'statusBarItem.errorBackground': 'bgBase',
+    'statusBarItem.errorForeground': 'fgPrimary',
+    'statusBarItem.errorHoverBackground': 'selectionBg',
     'statusBarItem.errorHoverForeground': 'fgPrimary',
     'statusBarItem.focusBorder': 'borderFocus',
     'statusBarItem.hoverBackground': 'bgBase',
@@ -928,18 +931,18 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'statusBarItem.offlineForeground': 'fgMuted',
     'statusBarItem.offlineHoverBackground': 'bgRaised',
     'statusBarItem.offlineHoverForeground': 'fgMuted',
-    'statusBarItem.prominentBackground': 'invertBg',
-    'statusBarItem.prominentForeground': 'invertFg',
-    'statusBarItem.prominentHoverBackground': 'bgBase',
+    'statusBarItem.prominentBackground': 'bgBase',
+    'statusBarItem.prominentForeground': 'fgPrimary',
+    'statusBarItem.prominentHoverBackground': 'selectionBg',
     'statusBarItem.prominentHoverForeground': 'fgPrimary',
-    'statusBarItem.remoteBackground': 'invertBg',
-    'statusBarItem.remoteForeground': 'invertFg',
-    'statusBarItem.remoteHoverBackground': 'bgRaised',
-    'statusBarItem.remoteHoverForeground': 'fgSecondary',
-    'statusBarItem.warningBackground': 'invertBg',
-    'statusBarItem.warningForeground': 'invertFg',
-    'statusBarItem.warningHoverBackground': 'bgRaised',
-    'statusBarItem.warningHoverForeground': 'fgSecondary',
+    'statusBarItem.remoteBackground': 'bgBase',
+    'statusBarItem.remoteForeground': 'fgPrimary',
+    'statusBarItem.remoteHoverBackground': 'selectionBg',
+    'statusBarItem.remoteHoverForeground': 'fgPrimary',
+    'statusBarItem.warningBackground': 'bgBase',
+    'statusBarItem.warningForeground': 'fgPrimary',
+    'statusBarItem.warningHoverBackground': 'selectionBg',
+    'statusBarItem.warningHoverForeground': 'fgPrimary',
     // strongForeground
     'strongForeground': 'fgPrimary',
     // symbolIcon

@@ -20,13 +20,29 @@ const currentKeys = fs.readFileSync(colorKeysPath, 'utf8')
     .filter(l => l && !l.startsWith('//'))
     .map(l => l.split(/\s+/)[0]);
 
-// Parse the existing table (we own its format — one `'key': role,` per line)
+// Parse the existing table (we own its format — one `'key': role,` per line).
+// Hand-written comments are preserved across syncs: a trailing `// ...` on a
+// key line, and any explanatory comment lines directly above a key (excluding
+// the auto-generated `// <prefix>` group headers we re-emit ourselves).
 const existing = new Map<string, Role>();
+const trailingComments = new Map<string, string>();
+const leadingComments = new Map<string, string[]>();
+let pendingComments: string[] = [];
 for (const line of fs.readFileSync(classificationPath, 'utf8').split('\n')) {
-    const m = /^\s*'([^']+)':\s*(?:'(\w+)'|null),\s*$/.exec(line);
+    const m = /^\s*'([^']+)':\s*(?:'(\w+)'|null),(.*)$/.exec(line);
     if (m) {
-        existing.set(m[1], (m[2] as TokenName | undefined) ?? null);
+        const key = m[1];
+        existing.set(key, (m[2] as TokenName | undefined) ?? null);
+        const trailing = m[3].trim();
+        if (trailing) { trailingComments.set(key, trailing); }
+        const prefix = key.split('.')[0];
+        const kept = pendingComments.filter(c => c !== `// ${prefix}`);
+        if (kept.length) { leadingComments.set(key, kept); }
+        pendingComments = [];
+        continue;
     }
+    const c = /^\s*(\/\/.*)$/.exec(line);
+    pendingComments = c ? [...pendingComments, c[1].trim()] : [];
 }
 
 // First-guess classification for keys we have not seen before
@@ -123,7 +139,13 @@ for (const [prefix, groupKeys] of groups) {
             role = classify(key);
             added.push(`${key} -> ${role}`);
         }
-        lines.push(`    '${key}': ${role === null ? 'null' : `'${role}'`},`);
+        for (const c of leadingComments.get(key) ?? []) {
+            lines.push(`    ${c}`);
+        }
+        let line = `    '${key}': ${role === null ? 'null' : `'${role}'`},`;
+        const trailing = trailingComments.get(key);
+        if (trailing) { line += ` ${trailing}`; }
+        lines.push(line);
     }
 }
 lines.push('};');

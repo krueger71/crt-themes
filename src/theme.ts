@@ -27,6 +27,8 @@ export interface ColorTokens {
     // Inverted (badges, buttons, status bar)
     invertBg: string;
     invertFg: string;
+    invertBgHover: string; // inverted surface nudged toward bg, so inverted
+                           // buttons have a visible hover state in the flat ladder
 
     // Solid highlight block for selections and hover highlights — the least
     // intense fg rung. Keys classified selectionBg should pair their
@@ -245,6 +247,7 @@ export function deriveTokens(src: SourceColors): ColorTokens {
 
         invertBg: fg,
         invertFg: bg,
+        invertBgHover: mix(fg, bg, 0.12),
 
         // = fgMuted: the faintest fg rung doubles as the highlight block,
         // leaving fgPrimary text 0.70 of the full fg/bg contrast
@@ -256,7 +259,7 @@ export function deriveTokens(src: SourceColors): ColorTokens {
         alphaStrong: withAlpha(fg, 0.33),
         alphaMid: withAlpha(fg, 0.16),
         alphaFaint: withAlpha(fg, 0.07),
-        shadow: '#00000066',
+        shadow: mix(bg, fg, 0.25), 
     };
 }
 
