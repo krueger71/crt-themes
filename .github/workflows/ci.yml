@@ -16,38 +16,27 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
 
       - run: npm ci
 
-      # The test suite downloads a full VS Code (~1 GB). The key rotates
-      # weekly rather than hashing a file, because the version resolves to
-      # whatever "stable" is at the time: a fixed key would pin us to a stale
-      # cache and re-download the new version on every run anyway. One
-      # download per week, and the suite still tracks current VS Code.
-      - name: VS Code cache key
-        id: vscode-cache-key
-        run: echo "week=$(date -u +%Y-%V)" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/cache@v4
-        with:
-          path: .vscode-test
-          key: vscode-test-${{ runner.os }}-${{ steps.vscode-cache-key.outputs.week }}
-
-      # `pretest` compiles and lints first, so those fail before the slow
-      # part. The suite boots a real VS Code, so the runner needs a display.
+      # The suite downloads VS Code (~320 MB) and boots it, so the runner
+      # needs a display. Deliberately uncached: the runners sit next to the
+      # update service and fetch it in ~7s, which a cache save/restore cycle
+      # does not beat. `pretest` compiles and lints first, so those fail
+      # before VS Code is even fetched.
       - name: Test
         run: xvfb-run -a npm test
 
       - name: Package
         run: npm run package
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: vsix
           path: build/*.vsix

@@ -82,17 +82,16 @@ Three things there are non-obvious:
 - **`concurrency` with `cancel-in-progress`** — pushing again supersedes the
   previous run on that branch. Theme tuning tends to produce bursts of pushes,
   and only the tip commit's result is interesting.
-- **The `.vscode-test` cache key rotates weekly** (`date -u +%Y-%V`) instead of
-  hashing a file. `@vscode/test-electron` resolves whatever VS Code "stable" is
-  at the time, so a content-hash key would go stale the moment VS Code ships a
-  release: cache hit, wrong version present, re-download anyway, and the key
-  never changes so the cache never refreshes. A weekly bucket costs one ~1 GB
-  download per week and keeps the suite tracking current VS Code — which is what
-  a theme that must follow new color keys wants.
+- **`.vscode-test` is deliberately not cached.** It looks like the obvious
+  optimization, but measured on a real run the VS Code download is 323 MB in
+  ~7s (the runners sit next to the Azure-hosted update service), while saving
+  the cache costs ~5s and restoring it costs about as much. The whole job is
+  ~45s; caching buys nothing and would pin the suite to a stale VS Code, when
+  tracking current stable is exactly what a theme following new color keys
+  wants.
 - **No fast/slow job split.** It looks tempting, but `pretest` already runs
   `compile` and `lint` before `vscode-test` starts, so type and lint errors fail
-  in under a minute without ever downloading Electron. A split would only
-  duplicate `npm ci`.
+  without ever fetching VS Code. A split would only duplicate `npm ci`.
 
 ### `publish.yml` — marketplace release
 
