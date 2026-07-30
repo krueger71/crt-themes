@@ -1,9 +1,10 @@
 name: Publish
 
+# Tagging is the only way to publish. A manual trigger would skip the
+# tag/version check below, and marketplace versions cannot be reused.
 on:
   push:
     tags: ['v*']
-  workflow_dispatch:
 
 jobs:
   publish:
@@ -39,7 +40,6 @@ jobs:
       # A tag that disagrees with package.json publishes the wrong version
       # under the wrong name, and versions cannot be reused once taken.
       - name: Check tag matches package.json
-        if: startsWith(github.ref, 'refs/tags/')
         run: |
           tag="${GITHUB_REF#refs/tags/v}"
           if [ "$tag" != "${{ steps.channel.outputs.version }}" ]; then

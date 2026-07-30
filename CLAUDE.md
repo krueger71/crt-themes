@@ -96,8 +96,10 @@ Three things there are non-obvious:
 
 ### `publish.yml` — marketplace release
 
-Triggers on pushing a `v*` tag (and `workflow_dispatch`). Runs the test suite,
-then `npx vsce publish`, authenticated with the `VSCE_PAT` repo secret.
+Triggers only on pushing a `v*` tag — there is deliberately no
+`workflow_dispatch`, because a manual run has no tag to check the version
+against. Runs the test suite, then `npx vsce publish`, authenticated with the
+`VSCE_PAT` repo secret.
 
 The marketplace has **no semver pre-release tags** — versions must be plain
 `major.minor.patch`, and a given version can live on only one channel. The
