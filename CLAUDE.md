@@ -35,7 +35,7 @@ Specific goals, in order:
 
 1. **Classified color properties** — every VS Code workbench/TextMate/semantic key is assigned to a role (e.g. `fgPrimary`, `bgRaised`, `borderSubtle`) so that arbitrary `fg`/`bg` pairs always produce a coherent result without manual tweaking.
 2. **Static themes** — replace the legacy-generated `themes/*.json` files for the existing palette variants (Amber, Green, Blue, etc.) using the new TypeScript pipeline.
-3. **CRT Custom dynamic theme** — a user-facing VS Code command lets the user pick their own `fg`/`bg`. The theme is applied as color customizations written into the user's `settings.json` (not as a `.json` theme file). Before writing, the extension backs up any existing `workbench.colorCustomizations` / `editor.tokenColorCustomizations` / `editor.semanticTokenColorCustomizations` values so they can be fully restored on reset.
+3. **CRT Custom dynamic theme** — a user-facing VS Code command lets the user pick their own `fg`/`bg`. The theme is applied as color customizations written into the user's `settings.json` (not as a `.json` theme file). There is no backup/restore step: every write is nested under a `[CRT Custom]` theme scope inside `workbench.colorCustomizations` / `editor.tokenColorCustomizations` / `editor.semanticTokenColorCustomizations` and merged over the existing global value, so customizations belonging to other themes are never touched and removing the block by hand is a complete undo.
 4. **Perceptually accurate mixing** — the opacity/mix levels in the 2-bit design system should be derived from luminance-based mixing grounded in color science (e.g. OKLCH or similar perceptually uniform space) rather than linear RGB interpolation, so the four "bit levels" feel evenly spaced to the human eye.
 
 The legacy JS pipeline (`src/crt.js` + `src/build.js`) has been deleted. The file `src/term.js` is a standalone file that allows printing of colors in terminal and is used for visual tuning, should not be deleted. The file `src/crt.c` is just a file that is used to create screenshots of the theme in various settings. Don't delete that either. Neither is part of the build.
@@ -46,7 +46,7 @@ The legacy JS pipeline (`src/crt.js` + `src/build.js`) has been deleted. The fil
 `theme.ts` defines a structured `ColorTokens` interface — solid ladder rungs (bgSunken/bgBase/bgRaised/bgWidget, fgPrimary→fgMuted, invertBg/Fg, selectionBg, borderSubtle/Focus) plus a small `alpha*` group used only where VS Code's renderer requires translucency (stacking editor decorations, scrollbar sliders, shadows). `deriveTokens()` mixes all solids perceptually in OKLab. `src/classification.ts` assigns every workbench color key (from `src/colorKeys.txt`, regenerated via `npm run extract-color-keys`) a `TokenName` role or `null` (deliberately unset); it is meant to be hand-tuned — the table is the source of truth, and `npm run sync-classification` updates it for new VS Code versions without losing hand-tuned roles. `build-themes.ts` reads `package.json#config.themes`, writes `themes/CRT-<Name>-color-theme.json` for every entry, and warns about any colorKeys.txt key missing from the classification.
 
 ### Runtime extension (`src/extension.ts`)
-The extension activates to support the **CRT Custom** theme's dynamic mode. When `crt-themes.dynamic` is true, changing `crt-themes.foreground` or `crt-themes.background` triggers `applyDynamicTheme()`, which calls `generateTheme()` from `src/theme.ts` and writes the result to VS Code's global `workbench.colorCustomizations`, `editor.tokenColorCustomizations`, and `editor.semanticTokenColorCustomizations`.
+The extension activates to support the **CRT Custom** theme's dynamic mode. When `crt-themes.dynamic` is true, changing `crt-themes.foreground`, `crt-themes.background` or `crt-themes.dynamic` itself triggers `applyCustomTheme()`, which calls `generateTheme()` from `src/theme.ts` and writes the result under the `[CRT Custom]` scope of VS Code's global `workbench.colorCustomizations`, `editor.tokenColorCustomizations`, and `editor.semanticTokenColorCustomizations`.
 
 All settings writes go through `inspect().globalValue` rather than `get()` so workspace-scoped values never leak into user settings. The `modifyCustomTheme` command prompts for fg/bg, saves them, applies the theme, and switches `workbench.colorTheme` to CRT Custom.
 
@@ -60,6 +60,69 @@ All settings writes go through `inspect().globalValue` rather than `get()` so wo
 ## Tests
 
 Tests live in `src/test/`. `extension.test.ts` covers the dynamic theme apply round-trip against the real global settings of the test instance, plus `normalizeHex` validation. Tests run inside a VS Code process via `@vscode/test-electron` — they cannot run headless without a display.
+
+## CI and releasing
+
+Two GitHub Actions workflows in `.github/workflows/`. They are excluded from the
+packaged extension via `.vscodeignore`.
+
+### `ci.yml` — feedback on every push
+
+Triggers on `push` to any branch, on `pull_request`, and manually. The `push`
+trigger is deliberately written as `branches: ['**']` rather than a bare `push:` —
+a bare trigger also fires on tags, which would run CI a second time alongside
+`publish.yml` on every release.
+
+Steps: `npm ci` → `npm test` (under `xvfb-run -a`) → `npm run package` → upload
+the `.vsix` as an artifact. The repo is public, so standard-runner minutes are
+free; the workflow is tuned for wall-clock feedback and low noise, not cost.
+
+Three things there are non-obvious:
+
+- **`concurrency` with `cancel-in-progress`** — pushing again supersedes the
+  previous run on that branch. Theme tuning tends to produce bursts of pushes,
+  and only the tip commit's result is interesting.
+- **The `.vscode-test` cache key rotates weekly** (`date -u +%Y-%V`) instead of
+  hashing a file. `@vscode/test-electron` resolves whatever VS Code "stable" is
+  at the time, so a content-hash key would go stale the moment VS Code ships a
+  release: cache hit, wrong version present, re-download anyway, and the key
+  never changes so the cache never refreshes. A weekly bucket costs one ~1 GB
+  download per week and keeps the suite tracking current VS Code — which is what
+  a theme that must follow new color keys wants.
+- **No fast/slow job split.** It looks tempting, but `pretest` already runs
+  `compile` and `lint` before `vscode-test` starts, so type and lint errors fail
+  in under a minute without ever downloading Electron. A split would only
+  duplicate `npm ci`.
+
+### `publish.yml` — marketplace release
+
+Triggers on pushing a `v*` tag (and `workflow_dispatch`). Runs the test suite,
+then `npx vsce publish`, authenticated with the `VSCE_PAT` repo secret.
+
+The marketplace has **no semver pre-release tags** — versions must be plain
+`major.minor.patch`, and a given version can live on only one channel. The
+channel is therefore carried by the version number itself, following the
+convention VS Code documents:
+
+- **odd minor → pre-release** (`--pre-release` flag), e.g. `0.9.x`
+- **even minor → stable**, e.g. `1.0.0`
+
+The `Determine channel` step derives the flag from that parity, so releasing
+never depends on remembering a flag. `Check tag matches package.json` fails the
+run when the git tag disagrees with the manifest version — publishing the wrong
+version is unrecoverable, since marketplace versions are permanently consumed.
+
+Tags are refs to commits, not to branches, so the workflow does not care which
+branch a tag is on. But `vsce` rewrites relative README image links to
+`https://github.com/<repo>/raw/HEAD/...`, and `HEAD` there means the repo's
+**default branch** — so `media/*.png` must exist on master for the marketplace
+page to render.
+
+Release checklist: bump `package.json` (and the lockfile's two `version` fields),
+date the `CHANGELOG.md` / `README.md` entries, merge to master, then
+`git tag -s vX.Y.Z && git push --follow-tags`.
+
+**Publishing is the user's to trigger, never autonomous.**
 
 ## Reference
 

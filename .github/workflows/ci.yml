@@ -2,9 +2,15 @@ name: CI
 
 on:
   push:
-    branches: [master, necromancer]
+    branches: ['**']
   pull_request:
   workflow_dispatch:
+
+# Pushing again supersedes the previous run on that branch — useful while
+# iterating on theme colors, where several pushes land in quick succession.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:
@@ -19,8 +25,22 @@ jobs:
 
       - run: npm ci
 
-      # The suite boots a real VS Code via @vscode/test-electron, so the
-      # runner needs a display.
+      # The test suite downloads a full VS Code (~1 GB). The key rotates
+      # weekly rather than hashing a file, because the version resolves to
+      # whatever "stable" is at the time: a fixed key would pin us to a stale
+      # cache and re-download the new version on every run anyway. One
+      # download per week, and the suite still tracks current VS Code.
+      - name: VS Code cache key
+        id: vscode-cache-key
+        run: echo "week=$(date -u +%Y-%V)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache@v4
+        with:
+          path: .vscode-test
+          key: vscode-test-${{ runner.os }}-${{ steps.vscode-cache-key.outputs.week }}
+
+      # `pretest` compiles and lints first, so those fail before the slow
+      # part. The suite boots a real VS Code, so the runner needs a display.
       - name: Test
         run: xvfb-run -a npm test
 
@@ -31,3 +51,4 @@ jobs:
         with:
           name: vsix
           path: build/*.vsix
+          retention-days: 14
