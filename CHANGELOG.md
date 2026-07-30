@@ -1,9 +1,13 @@
 # Change Log
 
-## [1.0.0] - 2026-06-12
+## [0.9.0] - Unreleased
 
 Complete rewrite of the theme generation — the first release in six years. The
 look of every theme changes with this update.
+
+Published on the pre-release channel ahead of the 1.0.0 stable release. Version
+0.5.2 remains stable in the meantime; use *Switch to Pre-Release Version* on the
+extension page to try this one, and *Install Another Version* to go back.
 
 - Every VS Code workbench color key is now classified into a small set of
   design-system roles, and all concrete values are derived from just two

@@ -65,10 +65,11 @@ thx!
 
 ## Release Notes
 
-### [1.0.0] - 2026-06-12
+### [0.9.0] - Unreleased
 
 Complete rewrite of the theme generation — the first release in six years.
-The look of every theme changes with this update.
+The look of every theme changes with this update. Published on the pre-release
+channel ahead of 1.0.0 — 0.5.2 remains stable in the meantime.
 
 - All workbench color keys classified into design-system roles; every value
   derived from just a foreground/background pair.

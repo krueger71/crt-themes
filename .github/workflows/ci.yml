@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [master, necromancer]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # The suite boots a real VS Code via @vscode/test-electron, so the
+      # runner needs a display.
+      - name: Test
+        run: xvfb-run -a npm test
+
+      - name: Package
+        run: npm run package
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsix
+          path: build/*.vsix
