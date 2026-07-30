@@ -68,10 +68,14 @@ packaged extension via `.vscodeignore`.
 
 ### `ci.yml` — feedback on every push
 
-Triggers on `push` to any branch, on `pull_request`, and manually. The `push`
-trigger is deliberately written as `branches: ['**']` rather than a bare `push:` —
-a bare trigger also fires on tags, which would run CI a second time alongside
-`publish.yml` on every release.
+Triggers on `push` to `master`, on `pull_request`, and manually. The two event
+triggers are scoped to cover disjoint sets deliberately: a branch with an open
+PR would otherwise fire both on every push and run the whole suite twice. Work
+in progress is covered by its pull request, `master` by push. The cost is that a
+branch with no PR open gets no CI — `workflow_dispatch` is the escape hatch.
+
+Note that `push` must always name branches explicitly; a bare `push:` also fires
+on tags, which would run CI alongside `publish.yml` on every release.
 
 Steps: `npm ci` → `npm test` (under `xvfb-run -a`) → `npm run package` → upload
 the `.vsix` as an artifact. The repo is public, so standard-runner minutes are

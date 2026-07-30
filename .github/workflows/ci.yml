@@ -1,8 +1,11 @@
 name: CI
 
+# The two triggers cover disjoint sets, so a push never runs CI twice: work
+# in progress is covered by its pull request, master is covered by push.
+# A branch with no PR open gets no CI — use workflow_dispatch for that.
 on:
   push:
-    branches: ['**']
+    branches: [master]
   pull_request:
   workflow_dispatch:
 
