@@ -4,3 +4,4 @@ node_modules/
 /themes/
 /build/
 .DS_Store
+/legacy/
