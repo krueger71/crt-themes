@@ -84,6 +84,13 @@ export interface ColorTokens {
     alphaFaint: string;  // quarter unit
     shadow: string;
 
+    // Explicitly off, which is not the same as unset. An absent key falls back
+    // to VS Code's own registered default, and a few of those are hardcoded
+    // greys with no relation to the palette — editor.lineHighlightBorder
+    // paints #282828 on every dark theme. null in the classification means "we
+    // never set this"; this means "we set it to nothing".
+    transparent: string;
+
     // Ramps — intensity used to encode *identity* rather than emphasis.
     //
     // A few subsystems have to tell N things apart and have nothing but
@@ -429,6 +436,8 @@ export function deriveTokens(src: SourceColors): ColorTokens {
         alphaMid: chrome(0.5),
         alphaFaint: chrome(0.25),
         shadow: chrome(1),
+
+        transparent: '#00000000',
 
         ansiBlack: bg,
         ansiBrightBlack: fgl,
