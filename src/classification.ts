@@ -12,7 +12,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'activeSessionView.background': 'bgBase',
     'activeSessionView.foreground': 'fgPrimary',
     // activityBar
-    'activityBar.activeBackground': null,
+    'activityBar.activeBackground': 'selectionBgStrong',
     'activityBar.activeBorder': 'fgPrimary',
     'activityBar.activeFocusBorder': 'borderFocus',
     'activityBar.background': 'bgSunken',
@@ -24,7 +24,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'activityBarBadge.background': 'invertBg',
     'activityBarBadge.foreground': 'invertFg',
     // activityBarTop
-    'activityBarTop.activeBackground': null,
+    'activityBarTop.activeBackground': 'selectionBgStrong',
     'activityBarTop.activeBorder': 'borderFocus',
     'activityBarTop.background': 'bgBase',
     'activityBarTop.dropBorder': 'borderSubtle',
@@ -36,6 +36,9 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // activityWarningBadge
     'activityWarningBadge.background': 'invertBg',
     'activityWarningBadge.foreground': 'invertFg',
+    // agentFeedbackEditorWidget
+    'agentFeedbackEditorWidget.background': 'bgWidget',
+    'agentFeedbackEditorWidget.border': 'borderSubtle',
     // agentFeedbackInputWidget
     'agentFeedbackInputWidget.border': 'borderSubtle',
     // agentSessionReadIndicator
@@ -74,6 +77,9 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // agentsUpdateButton
     'agentsUpdateButton.downloadedBackground': 'bgBase',
     'agentsUpdateButton.downloadingBackground': 'bgBase',
+    // agentsVoice
+    'agentsVoice.speakingBackground': 'bgBase',
+    'agentsVoice.speakingForeground': 'fgSecondary',
     // badge
     'badge.background': 'invertBg',
     'badge.foreground': 'invertFg',
@@ -91,14 +97,14 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // browser
     'browser.border': 'borderSubtle',
     // button
-    'button.background': 'invertBg',
+    'button.background': 'invertBgMuted',
     'button.border': null,
     'button.foreground': 'invertFg',
-    'button.hoverBackground': 'invertBgHover', // subtle hover on the inverted button
-    'button.secondaryBackground': 'bgWidget',
+    'button.hoverBackground': 'invertBg', // buttons rest one rung down and light up
+    'button.secondaryBackground': 'bgBase',
     'button.secondaryBorder': 'borderSubtle',
     'button.secondaryForeground': 'fgPrimary',
-    'button.secondaryHoverBackground': 'bgBase',
+    'button.secondaryHoverBackground': 'bgWidget',
     'button.separator': 'invertFg',
     // chart
     'chart.axis': 'fgTertiary',
@@ -292,18 +298,18 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'editorBracketMatch.border': 'borderSubtle',
     'editorBracketMatch.foreground': 'fgSecondary',
     // editorBracketPairGuide
-    'editorBracketPairGuide.activeBackground1': 'selectionBg',
-    'editorBracketPairGuide.activeBackground2': 'selectionBg',
-    'editorBracketPairGuide.activeBackground3': 'selectionBg',
-    'editorBracketPairGuide.activeBackground4': 'selectionBg',
-    'editorBracketPairGuide.activeBackground5': 'selectionBg',
-    'editorBracketPairGuide.activeBackground6': 'selectionBg',
-    'editorBracketPairGuide.background1': 'bgBase',
-    'editorBracketPairGuide.background2': 'bgBase',
-    'editorBracketPairGuide.background3': 'bgBase',
-    'editorBracketPairGuide.background4': 'bgBase',
-    'editorBracketPairGuide.background5': 'bgBase',
-    'editorBracketPairGuide.background6': 'bgBase',
+    'editorBracketPairGuide.activeBackground1': 'fgMuted',
+    'editorBracketPairGuide.activeBackground2': 'fgMuted',
+    'editorBracketPairGuide.activeBackground3': 'fgMuted',
+    'editorBracketPairGuide.activeBackground4': 'fgMuted',
+    'editorBracketPairGuide.activeBackground5': 'fgMuted',
+    'editorBracketPairGuide.activeBackground6': 'fgMuted',
+    'editorBracketPairGuide.background1': 'alphaStrong',
+    'editorBracketPairGuide.background2': 'alphaStrong',
+    'editorBracketPairGuide.background3': 'alphaStrong',
+    'editorBracketPairGuide.background4': 'alphaStrong',
+    'editorBracketPairGuide.background5': 'alphaStrong',
+    'editorBracketPairGuide.background6': 'alphaStrong',
     // editorCodeLens
     'editorCodeLens.foreground': 'fgMuted',
     // editorCommentsWidget
@@ -359,33 +365,33 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'editorHoverWidget.border': 'borderSubtle',
     'editorHoverWidget.foreground': 'fgSecondary',
     'editorHoverWidget.highlightForeground': 'fgPrimary',
-    'editorHoverWidget.statusBarBackground': 'bgRaised',
+    'editorHoverWidget.statusBarBackground': 'bgBase',
     // editorIndentGuide
     'editorIndentGuide.activeBackground': null, // deprecated -> editorIndentGuide.activeBackground1
-    'editorIndentGuide.activeBackground1': 'selectionBg',
-    'editorIndentGuide.activeBackground2': 'selectionBg',
-    'editorIndentGuide.activeBackground3': 'selectionBg',
-    'editorIndentGuide.activeBackground4': 'selectionBg',
-    'editorIndentGuide.activeBackground5': 'selectionBg',
-    'editorIndentGuide.activeBackground6': 'selectionBg',
+    'editorIndentGuide.activeBackground1': 'fgMuted',
+    'editorIndentGuide.activeBackground2': 'fgMuted',
+    'editorIndentGuide.activeBackground3': 'fgMuted',
+    'editorIndentGuide.activeBackground4': 'fgMuted',
+    'editorIndentGuide.activeBackground5': 'fgMuted',
+    'editorIndentGuide.activeBackground6': 'fgMuted',
     'editorIndentGuide.background': null, // deprecated -> editorIndentGuide.background1
-    'editorIndentGuide.background1': 'bgBase',
-    'editorIndentGuide.background2': 'bgBase',
-    'editorIndentGuide.background3': 'bgBase',
-    'editorIndentGuide.background4': 'bgBase',
-    'editorIndentGuide.background5': 'bgBase',
-    'editorIndentGuide.background6': 'bgBase',
+    'editorIndentGuide.background1': 'alphaStrong',
+    'editorIndentGuide.background2': 'alphaStrong',
+    'editorIndentGuide.background3': 'alphaStrong',
+    'editorIndentGuide.background4': 'alphaStrong',
+    'editorIndentGuide.background5': 'alphaStrong',
+    'editorIndentGuide.background6': 'alphaStrong',
     // editorInfo
     'editorInfo.background': null,
     'editorInfo.border': null,
     'editorInfo.foreground': 'fgTertiary',
     // editorInlayHint
     'editorInlayHint.background': 'bgRaised',
-    'editorInlayHint.foreground': 'fgMuted',
+    'editorInlayHint.foreground': 'fgSecondary',
     'editorInlayHint.parameterBackground': 'bgRaised',
-    'editorInlayHint.parameterForeground': 'fgMuted',
+    'editorInlayHint.parameterForeground': 'fgSecondary',
     'editorInlayHint.typeBackground': 'bgRaised',
-    'editorInlayHint.typeForeground': 'fgMuted',
+    'editorInlayHint.typeForeground': 'fgSecondary',
     // editorLightBulb
     'editorLightBulb.foreground': 'fgSecondary',
     // editorLightBulbAi
@@ -393,9 +399,9 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // editorLightBulbAutoFix
     'editorLightBulbAutoFix.foreground': 'fgSecondary',
     // editorLineNumber
-    'editorLineNumber.activeForeground': 'fgSecondary',
-    'editorLineNumber.dimmedForeground': 'fgSecondary',
-    'editorLineNumber.foreground': 'fgMuted',
+    'editorLineNumber.activeForeground': 'fgMuted',
+    'editorLineNumber.dimmedForeground': 'alphaMid',
+    'editorLineNumber.foreground': 'alphaStrong',
     // editorLink
     'editorLink.activeForeground': 'fgPrimary',
     // editorMarkerNavigation
@@ -414,7 +420,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // editorMultiCursor
     'editorMultiCursor.primary.background': 'bgBase',
     'editorMultiCursor.primary.foreground': 'fgSecondary',
-    'editorMultiCursor.secondary.background': 'bgRaised',
+    'editorMultiCursor.secondary.background': 'bgBase',
     'editorMultiCursor.secondary.foreground': 'fgSecondary',
     // editorOverviewRuler
     'editorOverviewRuler.addedForeground': 'alphaMid',
@@ -441,11 +447,11 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'editorOverviewRuler.wordHighlightStrongForeground': 'alphaMid',
     'editorOverviewRuler.wordHighlightTextForeground': 'alphaMid',
     // editorPane
-    'editorPane.background': 'bgBase',
+    'editorPane.background': 'bgRaised',
     // editorRuler
     'editorRuler.foreground': 'borderSubtle',
     // editorStickyScroll
-    'editorStickyScroll.background': 'bgBase',
+    'editorStickyScroll.background': 'bgRaised',
     'editorStickyScroll.border': 'borderSubtle',
     'editorStickyScroll.shadow': 'shadow',
     // editorStickyScrollGutter
@@ -456,6 +462,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'editorSuggestWidget.background': 'bgWidget',
     'editorSuggestWidget.border': 'borderSubtle',
     'editorSuggestWidget.focusHighlightForeground': 'fgPrimary',
+    'editorSuggestWidget.focusOutline': 'borderFocus',
     'editorSuggestWidget.foreground': 'fgSecondary',
     'editorSuggestWidget.highlightForeground': 'fgPrimary',
     'editorSuggestWidget.selectedBackground': 'selectionBg',
@@ -781,7 +788,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // peekViewTitle
     'peekViewTitle.background': 'bgRaised',
     // peekViewTitleDescription
-    'peekViewTitleDescription.foreground': 'fgMuted',
+    'peekViewTitleDescription.foreground': 'fgSecondary',
     // peekViewTitleLabel
     'peekViewTitleLabel.foreground': 'fgPrimary',
     // pickerGroup
@@ -824,19 +831,22 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // sash
     'sash.hoverBorder': 'borderFocus',
     // scmGraph
-    'scmGraph.foreground1': 'fgSecondary',
-    'scmGraph.foreground2': 'fgSecondary',
-    'scmGraph.foreground3': 'fgSecondary',
-    'scmGraph.foreground4': 'fgSecondary',
-    'scmGraph.foreground5': 'fgSecondary',
-    'scmGraph.historyItemBaseRefColor': 'fgTertiary',
+    'scmGraph.foreground1': 'graphLane1',
+    'scmGraph.foreground2': 'graphLane2',
+    'scmGraph.foreground3': 'graphLane3',
+    'scmGraph.foreground4': 'graphLane4',
+    'scmGraph.foreground5': 'graphLane5',
+    // The three ref colors are badge *backgrounds*, and they all share one text
+    // color (historyItemHoverLabelForeground), so they must stay on the ink side
+    // of the ladder. Only two rungs read as a badge: bg-on-fgl is 1.5-3:1.
+    'scmGraph.historyItemBaseRefColor': 'fgSecondary',
     'scmGraph.historyItemHoverAdditionsForeground': 'fgSecondary',
-    'scmGraph.historyItemHoverDefaultLabelBackground': 'bgRaised',
+    'scmGraph.historyItemHoverDefaultLabelBackground': 'alphaStrong',
     'scmGraph.historyItemHoverDefaultLabelForeground': 'fgSecondary',
     'scmGraph.historyItemHoverDeletionsForeground': 'fgSecondary',
-    'scmGraph.historyItemHoverLabelForeground': 'fgSecondary',
-    'scmGraph.historyItemRefColor': 'fgTertiary',
-    'scmGraph.historyItemRemoteRefColor': 'fgTertiary',
+    'scmGraph.historyItemHoverLabelForeground': 'invertFg',
+    'scmGraph.historyItemRefColor': 'invertBg',
+    'scmGraph.historyItemRemoteRefColor': 'fgSecondary',
     // scrollbar
     'scrollbar.background': 'bgBase',
     'scrollbar.shadow': 'shadow',
@@ -877,7 +887,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'settings.textInputBorder': 'borderSubtle',
     'settings.textInputForeground': 'fgSecondary',
     // sideBar
-    'sideBar.background': 'bgRaised',
+    'sideBar.background': 'bgBase',
     'sideBar.border': 'borderSubtle',
     'sideBar.dropBackground': 'alphaMid',
     'sideBar.foreground': 'fgSecondary',
@@ -901,7 +911,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     // simpleFindWidget
     'simpleFindWidget.sashBorder': 'borderSubtle',
     // statusBar
-    'statusBar.background': 'invertBg',
+    'statusBar.background': 'invertBgMuted',
     'statusBar.border': 'borderSubtle',
     // debugging flips the status bar back to normal video so it reads as a
     // distinct mode against the reverse-video default
@@ -910,7 +920,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'statusBar.debuggingForeground': 'fgPrimary',
     'statusBar.focusBorder': 'invertFg',
     'statusBar.foreground': 'invertFg',
-    'statusBar.noFolderBackground': 'invertBg',
+    'statusBar.noFolderBackground': 'invertBgMuted',
     'statusBar.noFolderBorder': 'borderSubtle',
     'statusBar.noFolderForeground': 'invertFg',
     // statusBarItem
@@ -922,7 +932,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'statusBarItem.compactHoverBackground': 'bgRaised',
     'statusBarItem.errorBackground': 'bgBase',
     'statusBarItem.errorForeground': 'fgPrimary',
-    'statusBarItem.errorHoverBackground': 'selectionBg',
+    'statusBarItem.errorHoverBackground': 'bgRaised',
     'statusBarItem.errorHoverForeground': 'fgPrimary',
     'statusBarItem.focusBorder': 'borderFocus',
     'statusBarItem.hoverBackground': 'bgBase',
@@ -933,18 +943,22 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'statusBarItem.offlineHoverForeground': 'fgMuted',
     'statusBarItem.prominentBackground': 'bgBase',
     'statusBarItem.prominentForeground': 'fgPrimary',
-    'statusBarItem.prominentHoverBackground': 'selectionBg',
+    'statusBarItem.prominentHoverBackground': 'bgRaised',
     'statusBarItem.prominentHoverForeground': 'fgPrimary',
     'statusBarItem.remoteBackground': 'bgBase',
     'statusBarItem.remoteForeground': 'fgPrimary',
-    'statusBarItem.remoteHoverBackground': 'selectionBg',
+    'statusBarItem.remoteHoverBackground': 'bgRaised',
     'statusBarItem.remoteHoverForeground': 'fgPrimary',
     'statusBarItem.warningBackground': 'bgBase',
     'statusBarItem.warningForeground': 'fgPrimary',
-    'statusBarItem.warningHoverBackground': 'selectionBg',
+    'statusBarItem.warningHoverBackground': 'bgRaised',
     'statusBarItem.warningHoverForeground': 'fgPrimary',
     // strongForeground
     'strongForeground': 'fgPrimary',
+    // surface
+    'surface.background': 'bgBase',
+    'surface.border': 'borderSubtle',
+    'surface.foreground': 'fgSecondary',
     // symbolIcon
     'symbolIcon.arrayForeground': 'fgSecondary',
     'symbolIcon.booleanForeground': 'fgSecondary',
@@ -980,7 +994,7 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'symbolIcon.unitForeground': 'fgSecondary',
     'symbolIcon.variableForeground': 'fgSecondary',
     // tab
-    'tab.activeBackground': 'bgBase',
+    'tab.activeBackground': 'selectionBg',
     'tab.activeBorder': null,
     'tab.activeBorderTop': 'fgPrimary',
     'tab.activeForeground': 'fgPrimary',
@@ -1009,22 +1023,25 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'tab.unfocusedInactiveForeground': 'fgMuted',
     'tab.unfocusedInactiveModifiedBorder': 'borderSubtle',
     // terminal
-    'terminal.ansiBlack': 'bgRaised',
-    'terminal.ansiBlue': 'fgSecondary',
-    'terminal.ansiBrightBlack': 'fgMuted',
-    'terminal.ansiBrightBlue': 'fgPrimary',
-    'terminal.ansiBrightCyan': 'fgPrimary',
-    'terminal.ansiBrightGreen': 'fgPrimary',
-    'terminal.ansiBrightMagenta': 'fgPrimary',
-    'terminal.ansiBrightRed': 'fgPrimary',
-    'terminal.ansiBrightWhite': 'fgPrimary',
-    'terminal.ansiBrightYellow': 'fgPrimary',
-    'terminal.ansiCyan': 'fgSecondary',
-    'terminal.ansiGreen': 'fgSecondary',
-    'terminal.ansiMagenta': 'fgSecondary',
-    'terminal.ansiRed': 'fgSecondary',
-    'terminal.ansiWhite': 'fgPrimary',
-    'terminal.ansiYellow': 'fgSecondary',
+    // The ANSI ramp — see the ansi* tokens. One role per slot: intensity is
+    // standing in for hue here, so these are the one group where a 1:1 mapping
+    // is the whole point.
+    'terminal.ansiBlack': 'ansiBlack',
+    'terminal.ansiBlue': 'ansiBlue',
+    'terminal.ansiBrightBlack': 'ansiBrightBlack',
+    'terminal.ansiBrightBlue': 'ansiBrightBlue',
+    'terminal.ansiBrightCyan': 'ansiBrightCyan',
+    'terminal.ansiBrightGreen': 'ansiBrightGreen',
+    'terminal.ansiBrightMagenta': 'ansiBrightMagenta',
+    'terminal.ansiBrightRed': 'ansiBrightRed',
+    'terminal.ansiBrightWhite': 'ansiBrightWhite',
+    'terminal.ansiBrightYellow': 'ansiBrightYellow',
+    'terminal.ansiCyan': 'ansiCyan',
+    'terminal.ansiGreen': 'ansiGreen',
+    'terminal.ansiMagenta': 'ansiMagenta',
+    'terminal.ansiRed': 'ansiRed',
+    'terminal.ansiWhite': 'ansiWhite',
+    'terminal.ansiYellow': 'ansiYellow',
     'terminal.background': 'bgSunken',
     'terminal.border': 'borderSubtle',
     'terminal.dropBackground': 'alphaMid',
@@ -1139,8 +1156,8 @@ export const workbenchClassification: Record<string, TokenName | null> = {
     'toolbar.hoverBackground': 'selectionBg',
     'toolbar.hoverOutline': null,
     // tree
-    'tree.inactiveIndentGuidesStroke': 'borderSubtle',
-    'tree.indentGuidesStroke': 'borderSubtle',
+    'tree.inactiveIndentGuidesStroke': 'alphaMid',
+    'tree.indentGuidesStroke': 'alphaStrong',
     'tree.tableColumnsBorder': 'borderSubtle',
     'tree.tableOddRowsBackground': 'bgBase',
     // walkThrough

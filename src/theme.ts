@@ -6,45 +6,113 @@ export interface SourceColors {
 }
 
 // The derived 2-bit palette — all theme mapping works from this.
-// Everything is a solid color except the `alpha*` group, which exists only
-// for the handful of VS Code keys that must be translucent because the
-// renderer stacks them (editor decorations, scrollbar sliders, shadows).
+//
+// The ladder is five evenly spaced solids — the background, a raised surface,
+// and three text intensities:
+//
+//     bg ────── surface ── fgl ────── fgm ── fg
+//     0.00       0.25     0.50       0.75   1.00
+//
+// The three top rungs are the ink, and all three are legible as text. Standard
+// editor text is full fg (editor.foreground), secondary text is fgm, and
+// de-emphasized text — comments, line numbers, inlay hints, disabled labels —
+// is fgl.
+//
+// The surface rung is not ink; it is too dark to read as text and is only ever
+// a background. It exists because some surfaces must be *opaque* and still
+// separate from the editor — a hover popup cannot let code show through it —
+// so chrome's translucency is not an option there. It sits at the same 0.25
+// position as one unit of CHROME, which is why a widget and the border around
+// it read as the same distance off the background.
+//
+// The ladder is symmetric, so it is read from whichever end a key's intent
+// starts at: fgl is both "the faintest ink" and "one step up from the
+// background". Inverted keys are free for the same reason — muted ink on an
+// fg-colored surface is one step from bg toward fg, i.e. fgl again.
+//
+// The role names are kept as distinct entries even where they resolve to the
+// same value: they are the vocabulary classification.ts speaks, and they
+// record *intent* — fgSecondary and fgTertiary mean different things while
+// both sitting on fgm. That also means the ladder can be re-expanded later by
+// editing deriveTokens() alone, without touching the ~880-key table.
+//
+// Chrome is *not* one of the four. Borders, selection blocks and editor
+// decorations are translucent and sit below fgl — partly because three text
+// intensities exhaust the solid budget, but mainly because these keys paint
+// over arbitrary content and were never solid colors to begin with. See the
+// CHROME constant.
 export interface ColorTokens {
-    // Backgrounds. In the flat retro look every surface is the raw bg;
-    // the four names are kept as distinct classification roles so the
-    // ladder can be re-expanded later by editing deriveTokens() alone.
+    // Backgrounds. bg is the extreme of the ladder, so "sunken" cannot go any
+    // lower — it stays on base, and only the raised pair steps up.
     bgSunken: string;   // below base — panels/terminal/title bar wells
     bgBase: string;     // bg @ 100% — the editor surface
-    bgRaised: string;   // sidebars, hover, line highlight
-    bgWidget: string;   // floating widgets, menus, dropdowns
+    bgRaised: string;   // surface — headers, chips, hover fills, zen side panes
+    bgWidget: string;   // surface — floating widgets, menus, dropdowns
 
-    // Foregrounds (fg side of the ladder)
-    fgPrimary: string;   // fg @ 100%
-    fgSecondary: string; // one rung down
-    fgTertiary: string;  // two rungs down
-    fgMuted: string;     // faintest readable rung
+    // The ink ladder — three legible text intensities.
+    fgPrimary: string;   // fg  — standard editor text, keywords, emphasis
+    fgSecondary: string; // fgm — the body-text workhorse
+    fgTertiary: string;  // fgm
+    fgMuted: string;     // fgl — comments, line numbers, hints, disabled
 
     // Inverted (badges, buttons, status bar)
     invertBg: string;
     invertFg: string;
-    invertBgHover: string; // inverted surface nudged toward bg, so inverted
-                           // buttons have a visible hover state in the flat ladder
+    invertBgMuted: string; // inverted surface stepped one rung toward bg.
+                           // Buttons rest here and light up to invertBg on
+                           // hover; badges, which have to be seen rather than
+                           // clicked, stay on invertBg throughout.
 
-    // Solid highlight block for selections and hover highlights — the least
-    // intense fg rung. Keys classified selectionBg should pair their
-    // foreground with fgPrimary so text keeps contrast against the block.
+    // Chrome — translucent, below the ink ladder. Borders, dividers and
+    // selection blocks read as the same faint level, which is what makes
+    // elevation legible in a palette with no tinted surfaces. Keys classified
+    // selectionBg pair with fgPrimary, which keeps full contrast against bg
+    // because the block underneath is nearly transparent.
     selectionBg: string;
+    selectionBgStrong: string; // two units — for a selection that has to hold
+                               // its own next to a full-fg active border
     borderSubtle: string;
-    borderFocus: string;
+    borderFocus: string; // full fg — a focus ring is the one border that must
+                         // never be missable
 
-    // Translucent — only for keys VS Code composites over other decorations
-    alphaText: string;   // near-opaque fg: readable as text, but not 100%
+    // Translucent decorations, in units of CHROME
+    alphaText: string;   // composites to fgm: readable as text, but not 100%
                          // opaque, for *foreground* keys VS Code requires
                          // translucent (e.g. chat diff line colors)
-    alphaStrong: string;
-    alphaMid: string;
-    alphaFaint: string;
+    alphaStrong: string; // one unit
+    alphaMid: string;    // half a unit
+    alphaFaint: string;  // quarter unit
     shadow: string;
+
+    // Ramps — intensity used to encode *identity* rather than emphasis.
+    //
+    // A few subsystems have to tell N things apart and have nothing but
+    // brightness to do it with: terminal ANSI colors, and the branch lanes in
+    // the source control graph. These are the only places the theme uses a
+    // value that is not a ladder rung, and they are deliberately spread over
+    // the legible half of the range so that everything on a ramp still reads.
+    ansiBlack: string;
+    ansiRed: string;
+    ansiGreen: string;
+    ansiYellow: string;
+    ansiBlue: string;
+    ansiMagenta: string;
+    ansiCyan: string;
+    ansiWhite: string;
+    ansiBrightBlack: string;
+    ansiBrightRed: string;
+    ansiBrightGreen: string;
+    ansiBrightYellow: string;
+    ansiBrightBlue: string;
+    ansiBrightMagenta: string;
+    ansiBrightCyan: string;
+    ansiBrightWhite: string;
+
+    graphLane1: string;
+    graphLane2: string;
+    graphLane3: string;
+    graphLane4: string;
+    graphLane5: string;
 }
 
 export type TokenName = keyof ColorTokens;
@@ -83,8 +151,8 @@ export interface SemanticTokenRule {
 // doesn't even average physical light), and even physically-linear light
 // doesn't match how the eye perceives lightness differences. OKLab fixes the
 // first by converting through linear RGB, and the second with a cube-root
-// response curve modeled on human vision. The payoff here: the fg ladder's
-// 0.25/0.50/0.70 mix fractions land as evenly-spaced perceived intensities
+// response curve modeled on human vision. The payoff here: the ink ladder's
+// 0.50/0.75/1.00 mix fractions land as evenly-spaced perceived intensities
 // for any fg/bg pair the user picks.
 // ---------------------------------------------------------------------------
 
@@ -212,54 +280,180 @@ export function withAlpha(hex: string, alpha: number): string {
     return normalizeHex(hex) + Math.round(alpha * 255).toString(16).padStart(2, '0');
 }
 
+/**
+ * Find the alpha that makes `fg` over `bg` land on the ladder rung at mix
+ * fraction `f` — i.e. the translucent equivalent of mix(bg, fg, f).
+ *
+ * The two are not the same number. mix() interpolates in OKLab, while VS
+ * Code's renderer composites the way every compositor does: a straight
+ * per-channel lerp of the gamma-encoded sRGB bytes. So the alpha has to be
+ * solved for rather than copied from f.
+ *
+ * The rung is generally not *on* the sRGB segment between bg and fg (OKLab
+ * bows away from it — a mix of amber and near-black gains blue that neither
+ * endpoint has), so there is no exact answer. This takes the least-squares
+ * projection onto the segment, which is the closest a single alpha can get.
+ */
+export function alphaFor(bg: string, fg: string, f: number): number {
+    const b = hexToRgb(bg);
+    const g = hexToRgb(fg);
+    const t = hexToRgb(mix(bg, fg, f));
+    let num = 0, den = 0;
+    for (let c = 0; c < 3; c++) {
+        const d = g[c] - b[c];
+        num += d * (t[c] - b[c]);
+        den += d * d;
+    }
+    // fg === bg: no segment to project onto, and no contrast to recover.
+    if (den === 0) { return f; }
+    return Math.max(0, Math.min(1, num / den));
+}
+
 // ---------------------------------------------------------------------------
 // Token derivation — the single place where the 2-bit ladder is tuned
 // ---------------------------------------------------------------------------
 
 /**
- * Derive the full ColorTokens palette from the user's two source colors.
- * All mix fractions and alpha levels live here and nowhere else:
+ * The ink ladder: three text intensities, as mix fractions from bg toward fg.
+ * The steps are a uniform 0.25 apart, so the levels are evenly spaced in
+ * perceived lightness — this is where goal 4's "evenly spaced bit levels"
+ * actually applies. CHROME continues the same spacing one step below fgl,
+ * which is what makes "one level lower" a well-defined move for a key that
+ * has run out of ink rungs (see editorLineNumber.foreground).
  *
- * - fg ladder: perceptual mixes toward bg at 0 / 0.25 / 0.50 / 0.70 — the
- *   four "bit levels" of the design system.
- * - backgrounds: every surface is the raw bg (flat retro); depth is drawn
- *   with borders instead of tinted fills.
- * - selectionBg: the faintest fg rung reused as a solid highlight block.
- * - alpha*: translucent fg at three strengths, for keys VS Code composites
- *   over other content (decorations, scrollbar sliders).
+ *     bg ────── surface ── fgl ────── fgm ── fg
+ *     0.00       0.25     0.50       0.75   1.00
+ *
+ * All three are legible as text; that is the point of the ladder and the
+ * constraint that fixes RUNG_FGL. Below about 0.45 comments stop reading on
+ * the low-contrast palettes, and above about 0.60 the three levels stop being
+ * distinguishable from each other.
+ *
+ * OKLab is what makes the spacing hold: it guarantees the chosen fractions
+ * look the same for any fg/bg pair the user picks.
+ */
+const RUNG_SURFACE = 0.25; // opaque raised surfaces — never text
+const RUNG_FGL = 0.50;  // de-emphasized: comments, line numbers, hints, disabled
+const RUNG_FGM = 0.75;  // secondary: strings, types, variables, workbench body
+
+/**
+ * Chrome sits *below* the ink ladder, and is translucent rather than solid.
+ * It shares the 0.25 position with RUNG_SURFACE — the same step off the
+ * background, drawn with alpha instead of a fill.
+ *
+ * Chrome cannot share a rung with the ink: once fgl is
+ * bright enough to read as a comment it is far too bright to be a block you
+ * draw text on top of (fgPrimary on an fgl block measures 1.5–3.4:1 across
+ * the shipped palettes — worse than the comments it would be highlighting).
+ *
+ * Translucency is the right answer here rather than a workaround for the
+ * budget. These keys paint over arbitrary content — editor.selectionBackground
+ * is composited over syntax-colored text — so a solid value was always wrong
+ * for them. Solids are ink; alphas are surface treatment.
+ */
+const CHROME = 0.25;    // one "unit" of chrome, as a bg->fg mix fraction
+
+/**
+ * Derive the full ColorTokens palette from the user's two source colors.
+ * All mix fractions and alpha levels live here and nowhere else.
+ *
+ * Five solid values come out — bg, surface, fgl, fgm, fg. Most backgrounds are
+ * the raw bg (flat retro; depth is mostly drawn with borders rather than with
+ * tinted fills); surface is reserved for the things that have to be opaque and
+ * separate. The top three are the ink ladder: every text role lands on one of
+ * them, with full fg for standard editor text, keywords and emphasis. Chrome
+ * does not get a solid value at all — see CHROME.
  */
 export function deriveTokens(src: SourceColors): ColorTokens {
     const bg = normalizeHex(src.bg);
     const fg = normalizeHex(src.fg);
+
+    const surface = mix(bg, fg, RUNG_SURFACE);
+    const fgl = mix(bg, fg, RUNG_FGL);
+    const fgm = mix(bg, fg, RUNG_FGM);
+
+    // Chrome and decorations, in units of CHROME. Keeping them on a shared
+    // scale means stacked decorations accumulate in steps rather than
+    // drifting to arbitrary in-between values: two stacked half-units land on
+    // one full unit, a half over a full lands on one and a half.
+    //
+    // "Land on" is approximate for saturated pairs, since no single alpha can
+    // reach an off-segment target (see alphaFor). Measured across the shipped
+    // palettes the residual is OKLab dE <= 0.025 — well under one step, and
+    // mostly chroma rather than lightness. CRT Custom, yellow on blue and so
+    // the furthest hue travel, is the worst case at 0.054.
+    const chrome = (units: number) => withAlpha(fg, alphaFor(bg, fg, CHROME * units));
+
+    // Ramps. Both live in (fgl, fg] so that every step stays legible; only the
+    // spacing differs, because the two ramps carry a different number of
+    // things. Steps this fine are below the ladder's resolution on purpose —
+    // the point is to tell lanes and ANSI slots apart, not to rank them.
+    const ramp = (i: number, n: number) => mix(bg, fg, RUNG_FGL + (i / n) * (1 - RUNG_FGL));
+
+    // ANSI has sixteen slots and no hue to spend, so hue becomes intensity.
+    // The seven chromatic pairs are ordered by the perceived luminance of the
+    // real ANSI colors (blue darkest, white brightest), and each bright variant
+    // is one half-step above its dark twin — enough to tell "\e[31m" from
+    // "\e[91m" without either becoming unreadable. Black is the exception: it
+    // stays on bg because programs use it as a *background* (\e[40m), where a
+    // visible ink value would paint solid blocks across the terminal.
+    const ansi = (rank: number, bright: 0 | 1) => ramp(2 * rank + bright + 1, 14);
+
     return {
-        // Flat retro: there is exactly one surface color — the raw bg.
-        // Elevation and grouping are expressed with borders, never with
-        // tinted background mixes.
         bgSunken: bg,
         bgBase: bg,
-        bgRaised: bg,
-        bgWidget: bg,
+        bgRaised: surface,
+        bgWidget: surface,
 
+        // The ink ladder. fgSecondary and fgTertiary share fgm: the roles stay
+        // distinct in classification.ts as a record of intent, but three text
+        // levels is the budget, and comments have the stronger claim on fgl.
         fgPrimary: fg,
-        fgSecondary: mix(fg, bg, 0.25),
-        fgTertiary: mix(fg, bg, 0.50),
-        fgMuted: mix(fg, bg, 0.75),
+        fgSecondary: fgm,
+        fgTertiary: fgm,
+        fgMuted: fgl,
 
         invertBg: fg,
         invertFg: bg,
-        invertBgHover: mix(fg, bg, 0.12),
+        invertBgMuted: fgm,
 
-        // = fgMuted: the faintest fg rung doubles as the highlight block,
-        // leaving fgPrimary text 0.70 of the full fg/bg contrast
-        selectionBg: withAlpha(fg, 0.50), //mix(fg, bg, 0.75),
-        borderSubtle: mix(bg, fg, 0.25),
-        borderFocus: mix(bg, fg, 0.75),
+        // Translucent, so text drawn over these keeps its full contrast
+        // against bg instead of fighting a bright block.
+        selectionBg: chrome(1),
+        selectionBgStrong: chrome(2),
+        borderSubtle: chrome(1),
+        borderFocus: fg,
 
-        alphaText: withAlpha(fg, 0.90),
-        alphaStrong: withAlpha(fg, 0.33),
-        alphaMid: withAlpha(fg, 0.16),
-        alphaFaint: withAlpha(fg, 0.07),
-        shadow: mix(bg, fg, 0.25), 
+        alphaText: withAlpha(fg, alphaFor(bg, fg, RUNG_FGM)),
+        alphaStrong: chrome(1),
+        alphaMid: chrome(0.5),
+        alphaFaint: chrome(0.25),
+        shadow: chrome(1),
+
+        ansiBlack: bg,
+        ansiBrightBlack: fgl,
+        ansiBlue: ansi(0, 0),
+        ansiBrightBlue: ansi(0, 1),
+        ansiRed: ansi(1, 0),
+        ansiBrightRed: ansi(1, 1),
+        ansiMagenta: ansi(2, 0),
+        ansiBrightMagenta: ansi(2, 1),
+        ansiGreen: ansi(3, 0),
+        ansiBrightGreen: ansi(3, 1),
+        ansiCyan: ansi(4, 0),
+        ansiBrightCyan: ansi(4, 1),
+        ansiYellow: ansi(5, 0),
+        ansiBrightYellow: ansi(5, 1),
+        ansiWhite: ansi(6, 0),
+        ansiBrightWhite: ansi(6, 1),
+
+        // Five lanes, so the steps are wide enough to follow a branch line
+        // across the graph. Lanes 1 and 5 land on fgl+0.1 and fg.
+        graphLane1: ramp(1, 5),
+        graphLane2: ramp(2, 5),
+        graphLane3: ramp(3, 5),
+        graphLane4: ramp(4, 5),
+        graphLane5: ramp(5, 5),
     };
 }
 
@@ -311,10 +505,15 @@ export function mapWorkbenchColors(t: ColorTokens): Record<string, string> {
 
 /**
  * Semantic-token highlighting (used when a language server provides tokens;
- * takes precedence over the TextMate rules below). Kept deliberately coarse:
- * keywords/functions at full intensity, types and literals one rung down,
- * variables two rungs down, comments at the faintest rung — syntax "color"
- * is expressed as intensity plus bold/italic, like a real terminal.
+ * takes precedence over the TextMate rules below). Kept deliberately coarse,
+ * and mapped straight onto the three ink rungs: keywords, functions and
+ * operators at full fg; strings, types and variables at fgm; comments,
+ * decorators and punctuation at fgl. Bold and italic carry what intensity
+ * alone cannot.
+ *
+ * That is not a limitation worked around but the behaviour of the hardware
+ * being imitated: a monochrome terminal separated tokens with intensity plus
+ * attributes, never with hue.
  */
 export function mapSemanticRules(t: ColorTokens): Record<string, SemanticTokenRule> {
     return {
@@ -342,7 +541,7 @@ export function mapSemanticRules(t: ColorTokens): Record<string, SemanticTokenRu
 /**
  * TextMate-scope highlighting — the grammar-based fallback that covers
  * languages (and the many cases) where no semantic tokens are available.
- * Mirrors the intensity scheme of mapSemanticRules.
+ * Mirrors the three-rung intensity scheme of mapSemanticRules.
  */
 export function mapTextMateRules(t: ColorTokens): TextMateRule[] {
     return [

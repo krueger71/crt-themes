@@ -1,5 +1,5 @@
-// VS Code workbench color tokens — 936 keys (0 deprecated keys skipped)
-// VS Code 1.124.0, generated 2026-06-11T08:33:35.930Z by `npm run extract-color-keys`
+// VS Code workbench color tokens — 944 keys (0 deprecated keys skipped)
+// VS Code 1.131.0, generated 2026-07-30T16:57:25.958Z by `npm run extract-color-keys`
 
 actionBar.toggledBackground                                  // Background color for toggled action items in action bar.
 activeSessionView.background                                 // Background color of an active session view in the agent sessions window.
@@ -24,6 +24,8 @@ activityErrorBadge.background                                // Background color
 activityErrorBadge.foreground                                // Foreground color of the error activity badge
 activityWarningBadge.background                              // Background color of the warning activity badge
 activityWarningBadge.foreground                              // Foreground color of the warning activity badge
+agentFeedbackEditorWidget.background                         // Background color of the agent feedback widget shown in the editor.
+agentFeedbackEditorWidget.border                             // Border color of the agent feedback widget shown in the editor.
 agentFeedbackInputWidget.border                              // Border color of the agent feedback input widget shown in the editor.
 agentSessionReadIndicator.foreground                         // Foreground color for the read indicator in an agent session.
 agentSessionSelectedBadge.border                             // Border color for the badges in selected agent session items.
@@ -49,6 +51,8 @@ agentsUnreadBadge.background                                 // Background color
 agentsUnreadBadge.foreground                                 // Foreground color of the unread sessions count badge on the sidebar toggle.
 agentsUpdateButton.downloadedBackground                      // Background color of the update button when download is complete in the agent sessions window.
 agentsUpdateButton.downloadingBackground                     // Background color of the update button to show download progress in the agent sessions window.
+agentsVoice.speakingBackground                               // Background color for the speaking voice state row highlight
+agentsVoice.speakingForeground                               // Color for the speaking/active voice state indicator
 badge.background                                             // Badge background color. Badges are small information labels, e.g. for search results count.
 badge.foreground                                             // Badge foreground color. Badges are small information labels, e.g. for search results count.
 banner.background                                            // Banner background color. The banner is shown under the title bar of the window.
@@ -367,6 +371,7 @@ editorStickyScrollHover.background                           // Background color
 editorSuggestWidget.background                               // Background color of the suggest widget.
 editorSuggestWidget.border                                   // Border color of the suggest widget.
 editorSuggestWidget.focusHighlightForeground                 // Color of the match highlights in the suggest widget when an item is focused.
+editorSuggestWidget.focusOutline                             // Outline color of the focused (keyboard-navigated) entry in the suggest widget.
 editorSuggestWidget.foreground                               // Foreground color of the suggest widget.
 editorSuggestWidget.highlightForeground                      // Color of the match highlights in the suggest widget.
 editorSuggestWidget.selectedBackground                       // Background color of the selected entry in the suggest widget.
@@ -748,6 +753,9 @@ statusBarItem.warningForeground                              // Status bar warni
 statusBarItem.warningHoverBackground                         // Status bar warning items background color when hovering. Warning items stand out from other status bar entries to indicate warning conditions. The status bar is shown in the bottom of the window.
 statusBarItem.warningHoverForeground                         // Status bar warning items foreground color when hovering. Warning items stand out from other status bar entries to indicate warning conditions. The status bar is shown in the bottom of the window.
 strongForeground                                             // Highest-contrast foreground color, intended for text or icons that need maximum legibility across various backgrounds. This color is only used if not overridden by a component.
+surface.background                                           // Background color of framed container surfaces ("cards"), such as the floating workbench panels in the modern layout.
+surface.border                                               // Border color of framed container surfaces ("cards"), such as the floating workbench panels in the modern layout.
+surface.foreground                                           // Foreground color of framed container surfaces ("cards"), such as the floating workbench panels in the modern layout.
 symbolIcon.arrayForeground                                   // The foreground color for array symbols. These symbols appear in the outline, breadcrumb, and suggest widget.
 symbolIcon.booleanForeground                                 // The foreground color for boolean symbols. These symbols appear in the outline, breadcrumb, and suggest widget.
 symbolIcon.classForeground                                   // The foreground color for class symbols. These symbols appear in the outline, breadcrumb, and suggest widget.
