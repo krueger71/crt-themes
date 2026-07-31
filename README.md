@@ -4,9 +4,7 @@ Retro-style themes with a monochrome flavor.
 
 ***Full workbench theming.***
 
-![Green](media/green.png)
-![Amber](media/amber.png)
-![Gray](media/gray.png)
+![All eight palettes, same editor](media/montage.png)
 
 ## Features
 
@@ -21,16 +19,18 @@ colors a theme starts from.
 
 ## Included themes
 
+Each name links to a full-size screenshot.
+
 | Theme      | Foreground | Background | Style |
 | ---------- | ---------- | ---------- | ----- |
-| CRT Green  | `#33ff00`  | `#111111`  | Classic green phosphor |
-| CRT Amber  | `#ffb000`  | `#111111`  | Amber phosphor |
-| CRT Gray   | `#bbbbbb`  | `#111111`  | White/gray phosphor |
-| CRT Blue   | `#0099ff`  | `#111111`  | Blue phosphor |
-| CRT Red    | `#ff2222`  | `#111111`  | Red phosphor |
-| CRT 64     | `#6c5eb5`  | `#352879`  | Home-computer blue |
-| CRT Paper  | `#0f0f0f`  | `#f0f0f0`  | Light, ink on paper |
-| CRT Custom | your choice | your choice | See below |
+| [CRT Green](media/green.png)   | `#33ff00`  | `#111111`  | Classic green phosphor |
+| [CRT Amber](media/amber.png)   | `#ffb000`  | `#111111`  | Amber phosphor |
+| [CRT Gray](media/gray.png)     | `#bbbbbb`  | `#111111`  | White/gray phosphor |
+| [CRT Blue](media/blue.png)     | `#0099ff`  | `#111111`  | Blue phosphor |
+| [CRT Red](media/red.png)       | `#ff2222`  | `#111111`  | Red phosphor |
+| [CRT 64](media/64.png)         | `#6c5eb5`  | `#352879`  | Home-computer blue |
+| [CRT Paper](media/paper.png)   | `#0f0f0f`  | `#f0f0f0`  | Light, ink on paper |
+| [CRT Custom](media/custom.png) | your choice | your choice | See below |
 
 ## CRT Custom — your own two colors
 
