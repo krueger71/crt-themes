@@ -24,6 +24,19 @@ if (unclassified.length > 0) {
     }
 }
 
+// And the other direction: a classified key VS Code has never heard of is
+// silently ignored at load time, so a typo in a hand-tuned entry would be
+// invisible. `npm run sync-classification` drops removed keys, but the table
+// is edited by hand between syncs.
+const known = new Set(knownKeys);
+const unknown = Object.keys(workbenchClassification).filter(k => !known.has(k));
+if (unknown.length > 0) {
+    console.warn(`⚠ ${unknown.length} classified keys are unknown to VS Code (typo, or removed upstream):`);
+    for (const k of unknown) {
+        console.warn(`    ${k}`);
+    }
+}
+
 const outDir = path.join(root, 'themes');
 fs.mkdirSync(outDir, { recursive: true });
 

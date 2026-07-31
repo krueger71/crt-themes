@@ -34,12 +34,14 @@ export function activate(context: vscode.ExtensionContext) {
 			if (!relevant) { return; }
 
 			const cfg = vscode.workspace.getConfiguration('crt-themes');
+			// dynamic is read merged on purpose: it decides whether to act at
+			// all, so a workspace switching it off should be honoured there.
 			const dynamic = cfg.get<boolean>('dynamic', true);
 
 			if (!dynamic) { return; }
 
-			const bg = cfg.get<string>('background', DEFAULT_BG);
-			const fg = cfg.get<string>('foreground', DEFAULT_FG);
+			const bg = globalColor(cfg, 'background', DEFAULT_BG);
+			const fg = globalColor(cfg, 'foreground', DEFAULT_FG);
 			try {
 				await applyCustomTheme({ bg, fg });
 			} catch (err) {
@@ -50,6 +52,17 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 export function deactivate() { }
+
+/**
+ * Read a color the same way the customizations are read and written: global
+ * only. get() would merge a workspace value over it, and since the generated
+ * customizations always land in *user* settings, a workspace-scoped color
+ * would otherwise be baked into every other window.
+ */
+function globalColor(cfg: vscode.WorkspaceConfiguration, key: string, fallback: string): string {
+	const v = cfg.inspect<string>(key);
+	return v?.globalValue ?? v?.defaultValue ?? fallback;
+}
 
 async function promptColor(prompt: string, value: string): Promise<string | undefined> {
 	const input = await vscode.window.showInputBox({
@@ -70,9 +83,9 @@ async function promptColor(prompt: string, value: string): Promise<string | unde
 export async function modifyCustomTheme(): Promise<void> {
 	const cfg = vscode.workspace.getConfiguration('crt-themes');
 
-	const fg = await promptColor('Foreground color', cfg.get<string>('foreground', DEFAULT_FG));
+	const fg = await promptColor('Foreground color', globalColor(cfg, 'foreground', DEFAULT_FG));
 	if (fg === undefined) { return; }
-	const bg = await promptColor('Background color', cfg.get<string>('background', DEFAULT_BG));
+	const bg = await promptColor('Background color', globalColor(cfg, 'background', DEFAULT_BG));
 	if (bg === undefined) { return; }
 
 	await cfg.update('foreground', fg, vscode.ConfigurationTarget.Global);

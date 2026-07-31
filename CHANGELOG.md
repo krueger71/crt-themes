@@ -15,14 +15,30 @@ extension page to try this one, and *Install Another Version* to go back.
   fully themed workbench — no per-theme hand tuning.
 - Perceptual color mixing in OKLab: the foreground intensity levels are
   evenly spaced to the human eye regardless of palette.
-- Flatter, more retro look: a single background surface everywhere, with
-  depth drawn by borders instead of tinted fills. Selections and hover
-  highlights are solid blocks of the lowest foreground intensity; the status
-  bar, badges and buttons render in full reverse video.
+- Flatter, more retro look: the editor, sidebars and panels all share one
+  background, with a single raised surface for the things that have to be
+  opaque and separate — popups, menus, the suggest widget and the side panes
+  of the centred layout. Selections, borders and editor decorations are
+  translucent instead, so text keeps its contrast over them. Badges render in
+  reverse video; the status bar and buttons sit one intensity below it and
+  brighten on hover.
+- The sixteen terminal ANSI colors are spread across the legible intensity
+  range rather than collapsed onto two levels: the seven chromatic pairs are
+  ordered by the perceived brightness of the real ANSI colors, with each
+  bright variant a half-step above its dark twin. The branch lanes in the
+  source control graph get the same treatment.
 - New **CRT Custom** dynamic theme: pick your own foreground/background with
   the *CRT Themes: Modify custom theme* command, or edit the
   `crt-themes.foreground` / `crt-themes.background` settings — with
   `crt-themes.dynamic` enabled (the default) the workbench restyles live.
+- Checking every classified key against VS Code's own defaults turned up a
+  number of places where something was being drawn in the background color
+  and was therefore invisible: indentation and bracket guides, every mark on
+  the overview ruler, terminal command decorations, toggled toolbar buttons,
+  test coverage highlighting, and the branch badges in the source control
+  graph, which had the same color for the label and the chip behind it. List
+  hover, focus and selection are now three distinct levels instead of one,
+  and the three regions of a merge conflict can be told apart.
 - Fixed the red theme file name issue.
 
 ## [0.5.2] - 2020-06-27

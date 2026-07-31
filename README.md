@@ -76,8 +76,11 @@ channel ahead of 1.0.0 — 0.5.2 remains stable in the meantime.
 - All workbench color keys classified into design-system roles; every value
   derived from just a foreground/background pair.
 - Perceptual mixing in OKLab for evenly spaced intensity levels.
-- Flatter, more retro look: one background surface, border-drawn depth,
-  muted-block selections, reverse-video status bar and buttons.
+- Flatter, more retro look: one background for the editor, sidebars and
+  panels, plus a single raised surface for popups and menus. Selections and
+  decorations are translucent, so text keeps its contrast over them.
+- Terminal ANSI colors spread across the legible intensity range, ordered by
+  the perceived brightness of the real ANSI colors.
 - New CRT Custom dynamic theme with live application.
 - Fixed the red theme file name issue.
 

@@ -51,11 +51,19 @@ function classify(key: string): Role {
 
     if (k.includes('shadow')) { return 'shadow'; }
 
+    // The ruler strip is drawn over the editor background, so a mark at alphaMid
+    // measures ~1.1:1 and is invisible — the whole ruler was blank until this
+    // was corrected. Marks start at alphaStrong; severities outrank them.
     if (k.startsWith('editoroverviewruler')) {
-        if (k.includes('border')) { return null; }
-        return k.includes('error') ? 'alphaStrong' : 'alphaMid';
+        if (k.includes('border')) { return 'borderSubtle'; }
+        if (k.includes('error') || k.includes('warning')) { return 'fgMuted'; }
+        return 'alphaStrong';
     }
-    if (k.startsWith('minimap')) { return 'alphaMid'; }
+    if (k.startsWith('minimap')) {
+        if (k.includes('error')) { return 'fgMuted'; }
+        if (k.includes('warning')) { return 'alphaStrong'; }
+        return 'alphaMid';
+    }
     if (k.startsWith('merge') || k.startsWith('multidiff')) {
         if (k.includes('border')) { return 'borderSubtle'; }
         return k.includes('header') ? 'alphaStrong' : 'alphaMid';
@@ -87,7 +95,8 @@ function classify(key: string): Role {
             k.includes('snippet') || k.includes('tabstop')) { return 'alphaMid'; }
         if (k.includes('inactiveselection')) { return 'alphaMid'; }
         if (k.includes('selection') || k.includes('focus') || k.includes('selectedbackground') ||
-            k.includes('activebackground') || k.includes('pressed')) { return 'selectionBg'; }
+            k.includes('activebackground') || k.includes('pressed') ||
+            k.includes('toggled')) { return 'selectionBg'; }
         if (k.includes('hover')) { return 'bgRaised'; }
         if (k.includes('error') || k.includes('warning') || k.includes('info') ||
             k.includes('added') || k.includes('modified') || k.includes('deleted')) { return 'alphaFaint'; }
@@ -101,9 +110,16 @@ function classify(key: string): Role {
     }
 
     if (k.includes('icon')) {
-        if (k.includes('failed') || k.includes('errored') || k.includes('breakpoint')) { return 'fgPrimary'; }
-        if (k.includes('passed') || k.includes('start')) { return 'fgSecondary'; }
-        if (k.includes('skipped') || k.includes('unset') || k.includes('queued')) { return 'fgMuted'; }
+        const retired = k.includes('retired');   // a stale result reads one rung down
+        if (k.includes('failed') || k.includes('errored') || k.includes('breakpoint')) {
+            return retired ? 'fgSecondary' : 'fgPrimary';
+        }
+        if (k.includes('passed') || k.includes('start')) {
+            return retired ? 'fgMuted' : 'fgSecondary';
+        }
+        if (k.includes('skipped') || k.includes('unset') || k.includes('queued')) {
+            return retired ? 'alphaStrong' : 'fgMuted';
+        }
         return 'fgSecondary';
     }
 

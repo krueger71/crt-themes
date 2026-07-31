@@ -15,6 +15,9 @@ npm run lint             # eslint src/
 npm test                 # compile + lint + run vscode-test suite
 npm run package          # vsce package → build/*.vsix
 npm run clean            # rm build/ themes/ out/
+npm run screenshots      # regenerate media/*.png + montage + cycle.gif on a
+                         # private X server (needs Xvfb, ImageMagick, ffmpeg);
+                         # takes a substring to shoot one palette
 
 # Manual maintenance, when updating for a new VS Code release:
 npm run extract-color-keys   # launch VS Code (needs a display), dump its workbench
@@ -40,7 +43,7 @@ Specific goals, in order:
 
    The spacing is a uniform 0.25 the whole way (0.25 / 0.50 / 0.75 / 1.00), but only the top three rungs are *ink*. Treating all four as text levels was measured against every shipped palette and rejected: it leaves only two text-legible rungs and dims body text badly on the low-contrast pairs (Red, Blue, 64). The 0.25 rung is a background instead, and exists in both forms — solid as `RUNG_SURFACE`, translucent as `CHROME` — which is also what makes "one level lower" well defined for a key that has run out of ink rungs. See `RUNG_SURFACE` / `RUNG_FGL` / `RUNG_FGM` in `src/theme.ts`.
 
-The legacy JS pipeline (`src/crt.js` + `src/build.js`) has been deleted. The file `src/term.js` is a standalone file that allows printing of colors in terminal and is used for visual tuning, should not be deleted. The file `src/crt.c` is just a file that is used to create screenshots of the theme in various settings. Don't delete that either. Neither is part of the build.
+The legacy JS pipeline (`src/crt.js` + `src/build.js`) has been deleted. The file `src/term.js` is a standalone file that allows printing of colors in terminal and is used for visual tuning, should not be deleted. The file `src/crt.c` is the fixture `npm run screenshots` opens in the editor — it is what appears in every shipped screenshot, so its contents are load-bearing for the marketplace page. Don't delete that either. Neither is part of the build.
 
 ## Architecture
 
@@ -62,7 +65,7 @@ The many role names are kept anyway, and are what `classification.ts` speaks. Th
 ### Runtime extension (`src/extension.ts`)
 The extension activates to support the **CRT Custom** theme's dynamic mode. When `crt-themes.dynamic` is true, changing `crt-themes.foreground`, `crt-themes.background` or `crt-themes.dynamic` itself triggers `applyCustomTheme()`, which calls `generateTheme()` from `src/theme.ts` and writes the result under the `[CRT Custom]` scope of VS Code's global `workbench.colorCustomizations`, `editor.tokenColorCustomizations`, and `editor.semanticTokenColorCustomizations`.
 
-All settings writes go through `inspect().globalValue` rather than `get()` so workspace-scoped values never leak into user settings. The `modifyCustomTheme` command prompts for fg/bg, saves them, applies the theme, and switches `workbench.colorTheme` to CRT Custom.
+The fg/bg colors are both read and written through `inspect().globalValue` rather than `get()`, so a workspace-scoped color can never be baked into the user-level customizations. `crt-themes.dynamic` is the deliberate exception — it is read merged, because it decides whether to act at all and a workspace switching it off should be honoured there. The `modifyCustomTheme` command prompts for fg/bg, saves them, applies the theme, and switches `workbench.colorTheme` to CRT Custom.
 
 ## Adding or modifying a theme
 

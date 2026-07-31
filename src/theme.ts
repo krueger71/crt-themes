@@ -252,16 +252,6 @@ function oklabToHex([L, a, b]: OkLab): string {
 }
 
 /**
- * Step a color down in perceptual lightness by dL (OKLab L units, where the
- * whole black-to-white range is 1.0), keeping its hue/chroma. Clamps at the
- * gamut edge (a pure-black bg stays black).
- */
-export function darken(hex: string, dL: number): string {
-    const [L, a, b] = hexToOklab(hex);
-    return oklabToHex([Math.max(0, L - dL), a, b]);
-}
-
-/**
  * Perceptual mix: straight-line interpolation between the two colors in
  * OKLab, so t=0.5 looks halfway between them rather than being a numeric
  * average of gamma-encoded bytes. t may extrapolate outside [0,1] (result
