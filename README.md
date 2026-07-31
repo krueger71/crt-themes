@@ -4,7 +4,7 @@ Retro-style themes with a monochrome flavor.
 
 ***Full workbench theming.***
 
-![All eight palettes, same editor](media/montage.png)
+![The same editor cycling through every palette](media/cycle.gif)
 
 ## Features
 
@@ -18,6 +18,8 @@ intensity steps should look evenly spaced to the human eye no matter which two
 colors a theme starts from.
 
 ## Included themes
+
+![All eight palettes, same editor](media/montage.png)
 
 Each name links to a full-size screenshot.
 
