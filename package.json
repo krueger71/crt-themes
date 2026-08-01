@@ -108,9 +108,14 @@
         "path": "./themes/CRT-Green-color-theme.json"
       },
       {
-        "label": "CRT Custom",
+        "label": "CRT Amber",
         "uiTheme": "vs-dark",
-        "path": "./themes/CRT-Custom-color-theme.json"
+        "path": "./themes/CRT-Amber-color-theme.json"
+      },
+      {
+        "label": "CRT Gray",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-Gray-color-theme.json"
       },
       {
         "label": "CRT 64",
@@ -118,19 +123,9 @@
         "path": "./themes/CRT-64-color-theme.json"
       },
       {
-        "label": "CRT Amber",
-        "uiTheme": "vs-dark",
-        "path": "./themes/CRT-Amber-color-theme.json"
-      },
-      {
         "label": "CRT Blue",
         "uiTheme": "vs-dark",
         "path": "./themes/CRT-Blue-color-theme.json"
-      },
-      {
-        "label": "CRT Gray",
-        "uiTheme": "vs-dark",
-        "path": "./themes/CRT-Gray-color-theme.json"
       },
       {
         "label": "CRT Red",
@@ -141,6 +136,11 @@
         "label": "CRT Paper",
         "uiTheme": "vs",
         "path": "./themes/CRT-Paper-color-theme.json"
+      },
+      {
+        "label": "CRT Custom",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-Custom-color-theme.json"
       }
     ]
   },
