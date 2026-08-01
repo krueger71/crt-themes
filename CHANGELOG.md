@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.9.0] - Unreleased
+## [0.9.0] - 2026-08-01
 
 Complete rewrite of the theme generation — the first release in six years. The
 look of every theme changes with this update.
