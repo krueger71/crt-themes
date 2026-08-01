@@ -52,7 +52,12 @@ Your custom colors are applied as color customizations in your user
 `settings.json` (scoped to the CRT Custom theme). The first apply asks you to
 confirm this; once the section is there it never asks again. To remove the
 theme, delete that section together with the two color settings and pick
-another theme — nothing is written back unless you run the command again. Avoid doing further manual changes here since they will be overwritten when the two base colors change. Rather use the built-in function *Developer: Generate Color Theme From Current Settings* and take it from there.
+another theme — nothing is written back unless you run the command again.
+
+Don't hand-edit the generated section: the next run of the command replaces it
+wholesale. If you want to take the theme somewhere of your own, run
+*Developer: Generate Color Theme From Current Settings* and work from the file
+it gives you.
 
 ### Settings
 

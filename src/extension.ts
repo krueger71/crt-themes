@@ -51,9 +51,8 @@ export function needsFirstWriteWarning(): boolean {
 }
 
 /**
- * Confirm the first write. Only the command asks — editing settings is left
- * undisturbed, since the listener now never creates the block, only maintains
- * one the user already opted into.
+ * Confirm the first write, which is the only write the user has not already
+ * seen the size of. Nothing else in the extension touches settings.json.
  */
 async function confirmFirstWrite(): Promise<boolean> {
 	if (!needsFirstWriteWarning()) { return true; }

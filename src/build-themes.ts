@@ -37,14 +37,48 @@ if (unknown.length > 0) {
     }
 }
 
+// "CRT Amber" -> CRT-Amber-color-theme.json. Shared by the write below and the
+// manifest check above it, so the two cannot drift apart.
+const themeFile = (name: string) => `${name.replace(/\s+/g, '-')}-color-theme.json`;
+
+// The two halves of the manifest have to agree. `config.themes` drives what
+// gets generated; `contributes.themes` is what VS Code actually offers. A theme
+// listed in one but not the other fails silently either way — a generated file
+// nobody can select, or a contributed path that does not exist — and neither
+// shows up until someone goes looking in the theme picker.
+interface ThemeContribution { label: string; uiTheme: string; path: string }
+const contributions: ThemeContribution[] = pkg.contributes?.themes ?? [];
+const contributed = new Map(contributions.map(c => [c.label, c]));
+
+for (const [name, cfg] of Object.entries(themes)) {
+    const c = contributed.get(name);
+    if (!c) {
+        console.warn(`⚠ "${name}" is generated but missing from contributes.themes — VS Code will never offer it`);
+        continue;
+    }
+    const wantUiTheme = cfg.type === 'light' ? 'vs' : 'vs-dark';
+    if (c.uiTheme !== wantUiTheme) {
+        console.warn(`⚠ "${name}" is "${cfg.type}" in config.themes but uiTheme "${c.uiTheme}" in contributes.themes`);
+    }
+    const wantPath = `./themes/${themeFile(name)}`;
+    if (c.path !== wantPath) {
+        console.warn(`⚠ "${name}" is contributed as ${c.path}, but the build writes ${wantPath}`);
+    }
+}
+
+for (const c of contributions) {
+    if (!(c.label in themes)) {
+        console.warn(`⚠ "${c.label}" is contributed but has no config.themes entry — its file is never generated`);
+    }
+}
+
 const outDir = path.join(root, 'themes');
 fs.mkdirSync(outDir, { recursive: true });
 
 for (const [name, cfg] of Object.entries(themes)) {
     const uiTheme = cfg.type === 'light' ? 'vs' : 'vs-dark';
     const json = toThemeJson(name, uiTheme, { bg: cfg.bg, fg: cfg.fg });
-    // "CRT Amber" -> themes/CRT-Amber-color-theme.json (matches contributes.themes)
-    const file = `${name.replace(/\s+/g, '-')}-color-theme.json`;
+    const file = themeFile(name);
     fs.writeFileSync(path.join(outDir, file), JSON.stringify(json, null, 2) + '\n');
     console.log(`✓ ${file} (fg ${cfg.fg} on bg ${cfg.bg})`);
 }

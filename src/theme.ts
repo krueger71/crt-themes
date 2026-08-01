@@ -34,7 +34,7 @@ export interface SourceColors {
 // same value: they are the vocabulary classification.ts speaks, and they
 // record *intent* — fgSecondary and fgTertiary mean different things while
 // both sitting on fgm. That also means the ladder can be re-expanded later by
-// editing deriveTokens() alone, without touching the ~880-key table.
+// editing deriveTokens() alone, without touching the ~940-key table.
 //
 // Chrome is *not* one of the four. Borders, selection blocks and editor
 // decorations are translucent and sit below fgl — partly because three text
@@ -375,10 +375,12 @@ export function deriveTokens(src: SourceColors): ColorTokens {
     // one full unit, a half over a full lands on one and a half.
     //
     // "Land on" is approximate for saturated pairs, since no single alpha can
-    // reach an off-segment target (see alphaFor). Measured across the shipped
+    // reach an off-segment target (see alphaFor). Measured across the fixed
     // palettes the residual is OKLab dE <= 0.025 — well under one step, and
     // mostly chroma rather than lightness. CRT Custom, yellow on blue and so
-    // the furthest hue travel, is the worst case at 0.054.
+    // the furthest hue travel, is the worst case: it grows with the mix
+    // fraction, from 0.026 at chrome(0.25) to 0.054 at chrome(1) and 0.070 at
+    // chrome(2), which is the deepest level any key uses.
     const chrome = (units: number) => withAlpha(fg, alphaFor(bg, fg, CHROME * units));
 
     // Ramps. Both live in (fgl, fg] so that every step stays legible; only the
@@ -506,9 +508,10 @@ export function mapWorkbenchColors(t: ColorTokens): Record<string, string> {
  * Semantic-token highlighting (used when a language server provides tokens;
  * takes precedence over the TextMate rules below). Kept deliberately coarse,
  * and mapped straight onto the three ink rungs: keywords, functions and
- * operators at full fg; strings, types and variables at fgm; comments,
- * decorators and punctuation at fgl. Bold and italic carry what intensity
- * alone cannot.
+ * operators at full fg; strings, types and variables at fgm; comments and
+ * decorators at fgl. Bold and italic carry what intensity alone cannot.
+ * (Punctuation has no semantic token type — it is handled by the TextMate
+ * rules below, on the same rung.)
  *
  * That is not a limitation worked around but the behaviour of the hardware
  * being imitated: a monochrome terminal separated tokens with intensity plus

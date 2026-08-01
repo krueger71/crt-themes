@@ -15,7 +15,7 @@ function globalValueOf(section: string): Record<string, unknown> {
 	return typeof v === 'object' && v !== null ? v : {};
 }
 
-suite('Dynamic theme customizations', () => {
+suite('CRT Custom customizations', () => {
 	// Global settings persist across tests in the shared test profile —
 	// start every test from a clean slate.
 	setup(async () => {

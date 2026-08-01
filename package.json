@@ -144,9 +144,6 @@
       }
     ]
   },
-  "activationEvents": [
-    "onStartupFinished"
-  ],
   "main": "./out/extension.js",
   "scripts": {
     "clean": "rm -rf build themes out",
@@ -165,12 +162,12 @@
   "devDependencies": {
     "@types/mocha": "^10.0.10",
     "@types/node": "22.x",
-    "@types/vscode": "^1.115.0",
+    "@types/vscode": "~1.115.0",
     "@vscode/test-cli": "^0.0.15",
-    "@vscode/test-electron": "^3.0.0",
+    "@vscode/test-electron": "^3.1.0",
     "@vscode/vsce": "^3.9.2",
-    "eslint": "^10.5.0",
+    "eslint": "^10.8.0",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.61.0"
+    "typescript-eslint": "^8.65.0"
   }
 }
