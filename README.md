@@ -36,23 +36,31 @@ Each name links to a full-size screenshot.
 
 ## CRT Custom — your own two colors
 
+> **⚠ Note: This functionality, when used, adds over 1100 lines to your settings.json! ⚠**
+
 The **CRT Custom** theme is generated from colors you pick:
 
 1. Run *CRT Themes: Modify custom theme* from the command palette.
 2. Enter a foreground and a background color (`#rgb` or `#rrggbb`).
 3. The full theme is generated and applied immediately.
 
-Alternatively, edit the color settings directly — the workbench restyles live as you change them.
+To fine-tune, run the command again — it is pre-filled with your current pair,
+so it is two keystrokes and two Enters. Editing the color settings by hand does
+not restyle anything on its own; the command is the only thing that writes.
 
 Your custom colors are applied as color customizations in your user
-`settings.json` (scoped to the CRT Custom theme). Avoid doing further manual changes here since they will be overwritten when the two base colors change. Rather use the built-in function *Developer: Generate Color Theme From Current Settings* and take it from there.
+`settings.json` (scoped to the CRT Custom theme). The first apply asks you to
+confirm this; once the section is there it never asks again. To remove the
+theme, delete that section together with the two color settings and pick
+another theme — nothing is written back unless you run the command again. Avoid doing further manual changes here since they will be overwritten when the two base colors change. Rather use the built-in function *Developer: Generate Color Theme From Current Settings* and take it from there.
 
 ### Settings
 
 - `crt-themes.foreground`: CRT Custom foreground color.
 - `crt-themes.background`: CRT Custom background color.
-- `crt-themes.dynamic`: apply the CRT Custom colors to your
-  settings automatically whenever they change (default true).
+
+Both record what the command last applied and pre-fill its prompts. Changing
+them by hand takes effect the next time you run the command.
 
 ### Commands
 
@@ -81,7 +89,7 @@ channel ahead of 1.0.0 — 0.5.2 remains stable in the meantime.
   decorations are translucent, so text keeps its contrast over them.
 - Terminal ANSI colors spread across the legible intensity range, ordered by
   the perceived brightness of the real ANSI colors.
-- New CRT Custom dynamic theme with live application.
+- New CRT Custom theme: pick your own foreground/background from a command.
 - Fixed the red theme file name issue.
 
 ### [0.5.2] - 2020-06-27

@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import * as vscode from 'vscode';
-import { applyCustomTheme } from '../extension';
+import { applyCustomTheme, needsFirstWriteWarning } from '../extension';
 import { normalizeHex } from '../theme';
 
 const THEME_KEY = '[CRT Custom]';
@@ -48,6 +48,40 @@ suite('Dynamic theme customizations', () => {
 		assert.strictEqual(colors['unrelatedKey'], '#abcdef', 'sibling keys survive apply');
 		assert.ok(globalValueOf('editor.tokenColorCustomizations')[THEME_KEY], 'token block written');
 		assert.ok(globalValueOf('editor.semanticTokenColorCustomizations')[THEME_KEY], 'semantic block written');
+	});
+
+	test('first-write warning is needed until the block exists, and not after', async () => {
+		assert.ok(needsFirstWriteWarning(), 'warn on a clean profile');
+
+		await applyCustomTheme({ fg: '#ffb000', bg: '#111111' });
+		assert.ok(!needsFirstWriteWarning(), 'silent once the user has opted in');
+
+		// Removing the block by hand is the documented complete undo, so the
+		// warning has to come back with it.
+		for (const section of SECTIONS) {
+			await vscode.workspace.getConfiguration()
+				.update(section, undefined, vscode.ConfigurationTarget.Global);
+		}
+		assert.ok(needsFirstWriteWarning(), 'warn again after the block is deleted');
+	});
+
+	// Re-running the command with unchanged colors is the common case while
+	// fine-tuning, and it must not rewrite ~1100 lines for nothing.
+	test('re-applying the same colors leaves settings untouched', async () => {
+		await applyCustomTheme({ fg: '#ffb000', bg: '#111111' });
+		const before = SECTIONS.map(s => JSON.stringify(globalValueOf(s)));
+
+		await applyCustomTheme({ fg: '#ffb000', bg: '#111111' });
+		assert.deepStrictEqual(SECTIONS.map(s => JSON.stringify(globalValueOf(s))), before);
+	});
+
+	test('changing one color rewrites every section', async () => {
+		await applyCustomTheme({ fg: '#ffb000', bg: '#111111' });
+		const before = SECTIONS.map(s => JSON.stringify(globalValueOf(s)));
+
+		await applyCustomTheme({ fg: '#33ff33', bg: '#111111' });
+		SECTIONS.forEach((s, i) => assert.notStrictEqual(
+			JSON.stringify(globalValueOf(s)), before[i], `${s} follows the new color`));
 	});
 
 	test('apply rejects malformed colors without touching settings', async () => {

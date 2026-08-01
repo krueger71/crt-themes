@@ -85,18 +85,13 @@
           "type": "string",
           "format": "color-hex",
           "default": "#006aa7",
-          "description": "Background color for CRT Custom theme"
+          "description": "Background color for CRT Custom theme. Run \"CRT Themes: Modify custom theme\" to apply it — editing this value on its own does not restyle anything."
         },
         "crt-themes.foreground": {
           "type": "string",
           "format": "color-hex",
           "default": "#fecc02",
-          "description": "Foreground color for CRT Custom theme"
-        },
-        "crt-themes.dynamic": {
-          "type": "boolean",
-          "default": true,
-          "description": "Automatically apply CRT Custom colors to your settings.json"
+          "description": "Foreground color for CRT Custom theme. Run \"CRT Themes: Modify custom theme\" to apply it — editing this value on its own does not restyle anything."
         }
       }
     },
@@ -107,6 +102,11 @@
       }
     ],
     "themes": [
+      {
+        "label": "CRT Green",
+        "uiTheme": "vs-dark",
+        "path": "./themes/CRT-Green-color-theme.json"
+      },
       {
         "label": "CRT Custom",
         "uiTheme": "vs-dark",
@@ -131,11 +131,6 @@
         "label": "CRT Gray",
         "uiTheme": "vs-dark",
         "path": "./themes/CRT-Gray-color-theme.json"
-      },
-      {
-        "label": "CRT Green",
-        "uiTheme": "vs-dark",
-        "path": "./themes/CRT-Green-color-theme.json"
       },
       {
         "label": "CRT Red",

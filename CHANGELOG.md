@@ -27,10 +27,14 @@ extension page to try this one, and *Install Another Version* to go back.
   ordered by the perceived brightness of the real ANSI colors, with each
   bright variant a half-step above its dark twin. The branch lanes in the
   source control graph get the same treatment.
-- New **CRT Custom** dynamic theme: pick your own foreground/background with
-  the *CRT Themes: Modify custom theme* command, or edit the
-  `crt-themes.foreground` / `crt-themes.background` settings — with
-  `crt-themes.dynamic` enabled (the default) the workbench restyles live.
+- New **CRT Custom** theme: pick your own foreground/background with the
+  *CRT Themes: Modify custom theme* command. Re-running it is pre-filled with
+  your current pair, so fine-tuning is quick. Because it writes about 1100
+  lines into your `settings.json`, it asks for confirmation the first time —
+  and only until the block exists, so changing colors afterwards is never
+  interrupted. The colors are applied only by the command; editing the
+  `crt-themes.foreground` / `crt-themes.background` settings by hand takes
+  effect the next time you run it.
 - Checking every classified key against VS Code's own defaults turned up a
   number of places where something was being drawn in the background color
   and was therefore invisible: indentation and bracket guides, every mark on

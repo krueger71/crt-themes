@@ -459,7 +459,7 @@ export function deriveTokens(src: SourceColors): ColorTokens {
 /**
  * Generate everything a theme needs (workbench colors, TextMate rules,
  * semantic token rules) from a fg/bg pair. Used by both the static theme
- * builder and the dynamic CRT Custom feature in extension.ts.
+ * builder and the CRT Custom command in extension.ts.
  */
 export function generateTheme(src: SourceColors): GeneratedTheme {
     const tokens = deriveTokens(src);
