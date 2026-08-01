@@ -204,7 +204,11 @@ unset IFS
 # Contact sheet and palette cycle. Only worth doing for a full run — with a
 # filter argument the set is incomplete and the montage would be misleading.
 if [ $# -eq 0 ]; then
-    ORDER="amber green blue red gray 64 custom paper"
+    # Derived from the manifest rather than hardcoded, so the contact sheet and
+    # the GIF follow contributes.themes — the same order the Extensions view's
+    # Set Color Theme picker shows, and the one the README table lists. It used
+    # to be a separate hand-written list, which had drifted from both.
+    ORDER=$(node -p "require('./package.json').contributes.themes.map(t=>t.label.replace(/^CRT /,'').replace(/ /g,'-').toLowerCase()).join(' ')")
     echo "==> assembling"
     magick montage $(for p in $ORDER; do echo "$OUT/$p.png"; done) \
         -tile 4x2 -geometry 360x225+4+4 -background '#111111' "$OUT/montage.png"
